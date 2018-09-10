@@ -3,10 +3,10 @@
 Use `f2py` to build a Fortran shared object that can be called from
 Python::
 
-    f2py -c mathiness.f90 -m mathiness
+    f2py -c mathiness.f90 -m fmathiness
  
 """
-from mathiness import mathiness
+from fmathiness import mathiness
 
 
 x = 5
