@@ -13,7 +13,7 @@ contains
     character (len=MAX_ADVERB_LENGTH), intent (out) :: adverb
     integer :: status
 
-    adverb = trim(word) // trim(ly)
+    adverb = trim(word) // ly
     status = 0
   end function adverbtize
 
