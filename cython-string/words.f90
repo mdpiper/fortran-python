@@ -9,8 +9,8 @@ module words
 contains
 
   function adverbtize(word, adverb) result (status)
-    character (len=MAX_WORD_LENGTH), intent (in) :: word
-    character (len=MAX_ADVERB_LENGTH), intent (out) :: adverb
+    character (len=*), intent (in) :: word
+    character (len=*), intent (out) :: adverb
     integer :: status
 
     adverb = trim(word) // ly
