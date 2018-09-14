@@ -6,7 +6,7 @@ from the *words* module.
 It takes a noun as a string parameter
 and returns its adverb form (kinda) as a string.
 
-There are two options for building this example,
+There are three options for building this example,
 as described below.
 For additional detail, see the [Makefile](./Makefile).
 
@@ -63,3 +63,25 @@ not
 The length of a string is a hidden parameter in Fortran,
 so also pass the length of the string as a parameter
 in this formulation.
+
+
+## Cython
+
+Compile the Fortran code,
+set up a definition for it in Cython,
+then compile and build into a shared object
+and call in Python
+See the details in **adverbtize.pyx** and **setup.py**.
+
+Run:
+
+    make
+    python run_adverbtize.py
+
+Files:
+
+* words.f90
+* wrapper.f90
+* adverbtize.pyx
+* setup.py
+* run_adverbtize.py
