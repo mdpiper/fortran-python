@@ -1,0 +1,3 @@
+[submodule "bmi-fortran"]
+	path = bmi-fortran
+	url = https://github.com/csdms/bmi-fortran
