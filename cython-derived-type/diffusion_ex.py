@@ -3,7 +3,8 @@
 from f_diffusion import Diffusion
 
 
-x = Diffusion()
-x.initialize()
+m = Diffusion()
+m.initialize()
 
-print('The answer is:', x.model['n_x'])
+print('Number of array elements:', m.n_x)
+# print('Array values:', m.temperature)

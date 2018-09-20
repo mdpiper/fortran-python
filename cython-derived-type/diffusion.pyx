@@ -3,12 +3,13 @@ cimport numpy as np
 cimport cython
 
 
-ctypedef struct diffusion_model:
-    int n_x
+cdef extern from "diffusion_ex.c":
+    ctypedef struct diffusion_model:
+        np.int_t n_x
 
 
 cdef extern:
-    void c_initialize(diffusion_model *x);
+    void c_initialize(diffusion_model *m)
 
 
 cdef class Diffusion:
@@ -20,3 +21,7 @@ cdef class Diffusion:
 
     def initialize(self):
         c_initialize(&self.model);
+
+    @property
+    def n_x(self):
+        return self.model.n_x
