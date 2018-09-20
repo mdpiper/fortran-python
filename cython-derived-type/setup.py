@@ -6,6 +6,7 @@ setup(
     ext_modules = cythonize([
         Extension('f_diffusion',
                   ['diffusion.pyx'],
+                  libraries=['gfortran'],
                   extra_objects=['diffusion.o', 'c_diffusion.o'],
                   language='c'
               )
