@@ -46,4 +46,16 @@ contains
     time = c_model%time
   end subroutine c_get_current_time
 
+  subroutine c_update(c_model) bind(c)
+    type (c_diffusion_model), intent(inout) :: c_model
+
+    type (diffusion_model) :: model
+
+    model%time = c_model%time
+    call c_f_pointer(c_model%temperature, model%temperature, [c_model%n_x])
+    call advance(model)
+    c_model%temperature = c_loc(model%temperature(1))
+    c_model%time = model%time
+  end subroutine c_update
+
 end module c_diffusion

@@ -25,4 +25,11 @@ contains
     deallocate(model%temperature)
   end subroutine cleanup
 
+  subroutine advance(model)
+    type (diffusion_model), intent (inout) :: model
+
+    model%temperature = model%temperature + 1.0
+    model%time = model%time + 1.0
+  end subroutine advance
+
 end module diffusion
