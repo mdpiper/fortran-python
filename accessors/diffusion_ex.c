@@ -1,15 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-typedef struct {
-  int n_x;
-  float *temperature;
-} diffusion_model;
-
-void c_initialize(diffusion_model *m);
-void c_get_grid_x(diffusion_model *m, int *n);
-void c_get_value(diffusion_model *m, float **t);
+#include "c_diffusion.h"
 
 int main(int argc, char *argv[]) {
   diffusion_model model;
