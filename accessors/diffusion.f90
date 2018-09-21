@@ -5,6 +5,7 @@ module diffusion
   type :: diffusion_model
      integer :: n_x
      real, pointer :: temperature(:)
+     real :: time
   end type diffusion_model
 
 contains
@@ -15,6 +16,7 @@ contains
     model%n_x = 4
     allocate(model%temperature(model%n_x))
     model%temperature = (/ 3.0, 6.0, 9.0, 12.0 /)
+    model%time = 0.0
   end subroutine initialize
 
   subroutine cleanup(model)

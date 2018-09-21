@@ -12,6 +12,7 @@ cdef extern from "c_diffusion.h":
     void c_initialize(diffusion_model *m)
     void c_get_grid_x(diffusion_model *m, int *n);
     void c_get_value(diffusion_model *m, float **t);
+    void c_get_current_time(diffusion_model *m, float *time);
 
 
 cdef class Diffusion:
@@ -34,3 +35,8 @@ cdef class Diffusion:
         cdef float *temperature
         <void>c_get_value(&self.model, &temperature)
         return np.asarray(<float[:n_x]>temperature)
+
+    cpdef float get_current_time(self):
+        cdef float time
+        <void>c_get_current_time(&self.model, &time)
+        return time
