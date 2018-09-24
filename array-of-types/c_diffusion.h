@@ -1,3 +1,4 @@
+int c_new();
 void c_initialize(int model);
 void c_finalize(int model);
 void c_get_grid_x(int model, int *n);

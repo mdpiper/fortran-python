@@ -10,6 +10,20 @@ module c_diffusion
 
 contains
 
+  ! Find the next unused model index in the array.
+  function c_new() bind(c) result(model_index)
+    integer (c_int) :: model_index
+    integer :: i
+
+    model_index = 0
+    do i = 1, N_MODELS
+       if (.not.associated(model_array(i)%temperature)) then
+          model_index = i
+          return
+       end if
+    end do
+  end function c_new
+
   ! Initialize one model in the array, based on the input index.
   subroutine c_initialize(model_index) bind(c)
     integer (c_int), intent(in), value :: model_index

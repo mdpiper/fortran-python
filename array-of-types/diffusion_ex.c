@@ -17,12 +17,14 @@ void print_model(int model, int n, float time, float *temperature) {
 }
 
 int main(int argc, char *argv[]) {
-  int model1 = 1, model2 = 2;
+  int model1, model2;
   int n1, n2;
   float time1, time2;
   float *temperature1, *temperature2;
 
+  model1 = c_new();
   c_initialize(model1);
+  model2 = c_new();
   c_initialize(model2);
 
   c_get_grid_x(model1, &n1);
