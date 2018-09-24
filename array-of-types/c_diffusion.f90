@@ -5,7 +5,8 @@ module c_diffusion
 
   implicit none
 
-  type (diffusion_model) :: model_array(3)
+  integer, parameter :: N_MODELS = 3
+  type (diffusion_model) :: model_array(N_MODELS)
 
 contains
 
