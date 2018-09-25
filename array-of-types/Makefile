@@ -1,6 +1,6 @@
 FC = gfortran
 CC = gcc
-CFLAGS = -c -fPIC
+CFLAGS = -c -fPIC -I.
 LFLAGS =
 name = diffusion
 
