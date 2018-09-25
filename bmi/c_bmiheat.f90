@@ -37,14 +37,14 @@ contains
     integer (c_int), intent (in), value :: n
     character (len=1, kind=c_char), intent (in) :: config_file(n)
     integer (c_int) :: i, status
-    character (len=n, kind=c_char) :: config_file_local
+    character (len=n, kind=c_char) :: config_file_
 
     ! Convert `config_file` from rank-1 array to scalar.
     do i = 1, n
-       config_file_local(i:i) = config_file(i)
+       config_file_(i:i) = config_file(i)
     enddo
 
-    status = model_array(model_index)%initialize(config_file_local)
+    status = model_array(model_index)%initialize(config_file_)
   end function c_initialize
 
   ! Clean up one model in the array.
