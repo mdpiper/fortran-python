@@ -55,4 +55,25 @@ contains
     status = model_array(model_index)%finalize()
   end function c_finalize
 
+  ! Get the component name attribute.
+  function c_get_component_name(model_index, name, n) bind(c) result(status)
+    integer (c_int), intent(in), value :: model_index
+    integer (c_int), intent (in), value :: n
+    character (len=1, kind=c_char), intent (out) :: name(n)
+    integer (c_int) :: i, status
+    character (len=n, kind=c_char), pointer :: name_
+
+    ! Convert `name` from rank-1 array to scalar.
+    do i = 1, n
+       name_(i:i) = name(i)
+    enddo
+
+    status = model_array(model_index)%get_component_name(name_)
+
+    ! Load the `_name` result, trimmed, back into `name` for output.
+    do i = 1, len(trim(name_))
+        name(i) = name_(i:i)
+    enddo
+  end function c_get_component_name
+
 end module c_bmiheat
