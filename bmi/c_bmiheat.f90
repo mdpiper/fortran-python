@@ -32,11 +32,19 @@ contains
   end function c_new
 
   ! Initialize one model in the array, based on the input index.
-  function c_initialize(model_index) bind(c) result(status)
+  function c_initialize(model_index, config_file, n) bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
-    integer (c_int) :: status
+    integer (c_int), intent (in), value :: n
+    character (len=1, kind=c_char), intent (in) :: config_file(n)
+    integer (c_int) :: i, status
+    character (len=n, kind=c_char) :: config_file_local
 
-    status = model_array(model_index)%initialize("")
+    ! Convert `config_file` from rank-1 array to scalar.
+    do i = 1, n
+       config_file_local(i:i) = config_file(i)
+    enddo
+
+    status = model_array(model_index)%initialize(config_file_local)
   end function c_initialize
 
   ! Clean up one model in the array.
