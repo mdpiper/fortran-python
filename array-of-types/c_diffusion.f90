@@ -6,7 +6,8 @@ module c_diffusion
   implicit none
 
   integer, parameter :: N_MODELS = 3
-  type (diffusion_model) :: model_array(N_MODELS)
+  type (diffusion_model), target :: model_array(N_MODELS)
+  type (diffusion_model), pointer :: pmodel
 
 contains
 
@@ -17,11 +18,13 @@ contains
 
     model_index = 0
     do i = 1, N_MODELS
-       if (.not.associated(model_array(i)%temperature)) then
+       if (associated(pmodel, target=model_array(i))) then
+          nullify(pmodel)
           model_index = i
-          return
        end if
     end do
+    model_index = model_index + 1
+    pmodel => model_array(model_index)
   end function c_new
 
   ! Initialize one model in the array, based on the input index.
