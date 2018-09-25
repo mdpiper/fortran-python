@@ -23,8 +23,12 @@ contains
           model_index = i
        end if
     end do
-    model_index = model_index + 1
-    pmodel => model_array(model_index)
+    if (model_index.eq.N_MODELS) then
+       model_index = -1
+    else
+       model_index = model_index + 1
+       pmodel => model_array(model_index)
+    end if
   end function c_new
 
   ! Initialize one model in the array, based on the input index.
