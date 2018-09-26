@@ -7,6 +7,7 @@ config_file = ''
 
 
 m = Heat()
+print(m.get_component_name())
 
 m.initialize(config_file)
 m.finalize()
