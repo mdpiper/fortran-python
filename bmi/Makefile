@@ -5,6 +5,10 @@ CFLAGS = -c -fPIC -I. -I${BMI_LIB}
 LFLAGS = -L${BMI_LIB} -Wl,-rpath=${BMI_LIB} -lbmif -lbmiheatf
 name = bmiheat
 
+py_${name}:
+	${CC} ${CFLAGS} c_${name}.f90
+	python setup.py build_ext --inplace
+
 c_${name}:
 	${CC} ${CFLAGS} c_${name}.f90 ${name}_ex.c
 	${CC} ${LFLAGS} *.o -l${FC} -o $@
