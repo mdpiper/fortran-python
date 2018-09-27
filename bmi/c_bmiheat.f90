@@ -102,4 +102,29 @@ contains
     enddo
   end function bmi_get_input_var_names
 
+  ! Get the number of output variables.
+  function bmi_get_output_var_name_count(model_index, count) bind(c) result(status)
+    integer (c_int), intent(in), value :: model_index
+    integer (c_int), intent (out) :: count
+    integer (c_int) :: status
+
+    count = output_item_count  ! defined in bmi_heat.f90
+    status = BMI_SUCCESS
+  end function bmi_get_output_var_name_count
+
+  ! Get the names of the output variables.
+  function bmi_get_output_var_names(model_index, names) bind(c) result(status)
+    integer (c_int), intent(in), value :: model_index
+    type (c_ptr), dimension(output_item_count),  intent(out) :: names
+    integer (c_int) :: status, i
+    character (len=BMI_MAXVARNAMESTR), dimension(:), pointer :: pnames
+
+    status = model_array(model_index)%get_output_var_names(pnames)
+
+    do i = 1, output_item_count
+       pnames(i) = trim(pnames(i))//C_NULL_CHAR
+       names(i) = c_loc(pnames(i))
+    enddo
+  end function bmi_get_output_var_names
+
 end module c_bmiheat

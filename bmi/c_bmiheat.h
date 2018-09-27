@@ -9,3 +9,5 @@ int bmi_finalize(int model);
 int bmi_get_component_name(int model, char *name, int n);
 int bmi_get_input_var_name_count(int model, int *n);
 int bmi_get_input_var_names(int model, char **names);
+int bmi_get_output_var_name_count(int model, int *n);
+int bmi_get_output_var_names(int model, char **names);

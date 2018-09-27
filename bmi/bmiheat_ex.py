@@ -11,7 +11,8 @@ print(m.get_component_name())
 
 m.initialize(config_file)
 
-print(m.get_input_var_names())
+print('In:', m.get_input_var_names())
+print('Out:', m.get_output_var_names())
 
 m.finalize()
 

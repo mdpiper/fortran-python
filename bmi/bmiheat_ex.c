@@ -5,11 +5,11 @@
 
 
 int main(int argc, char *argv[]) {
-  int model, status, n_invars, i;
+  int model, status, n_invars, n_outvars, i;
   char *config_file = "";
   int nchars = strlen(config_file);
   char *component_name;
-  char **input_var_names;
+  char **input_var_names, **output_var_names;
 
   model = bmi_new();
   printf("Model %d\n", model);
@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
   printf("- component name: %s\n", component_name);
   free(component_name);
 
-  status = bmi_get_input_var_name_n_invars(model, &n_invars);
+  status = bmi_get_input_var_name_count(model, &n_invars);
   printf("- number of input vars: %d\n", n_invars);
 
   // Pointers to pointers, oh my.
@@ -37,6 +37,22 @@ int main(int argc, char *argv[]) {
     printf("  - %s\n", input_var_names[i]);
   }
   free(input_var_names);
+
+  status = bmi_get_output_var_name_count(model, &n_outvars);
+  printf("- number of output vars: %d\n", n_outvars);
+
+  // Pointers to pointers, oh my.
+  output_var_names = malloc(n_outvars);
+  output_var_names[0] = malloc(BMI_MAXVARNAMESTR);
+  for (i = 1; i < n_outvars; i++) {
+    output_var_names[i] = output_var_names[i - 1] + BMI_MAXVARNAMESTR;
+  }
+  status = bmi_get_output_var_names(model, output_var_names);
+  printf("- output var names:\n");
+  for (i = 0; i < n_outvars; i++) {
+    printf("  - %s\n", output_var_names[i]);
+  }
+  free(output_var_names);
 
   status = bmi_finalize(model);
   printf("- finalize status: %d\n", status);

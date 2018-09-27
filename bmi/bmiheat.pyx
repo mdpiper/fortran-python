@@ -12,6 +12,8 @@ cdef extern from "c_bmiheat.h":
     int bmi_get_component_name(int model, char *name, int n)
     int bmi_get_input_var_name_count(int model, int *n)
     int bmi_get_input_var_names(int model, char **names)
+    int bmi_get_output_var_name_count(int model, int *n)
+    int bmi_get_output_var_names(int model, char **names)
 
 
 def ok_or_raise(status):
@@ -68,6 +70,39 @@ cdef class Heat:
                 names[i] = names[i - 1] + BMI_MAXVARNAMESTR
 
             ok_or_raise(<int>bmi_get_input_var_names(self._bmi, names))
+
+            for i in range(count):
+                py_names.append(names[i].decode('utf-8'))
+
+        except Exception:
+            raise
+
+        finally:
+            free(names)
+
+        return tuple(py_names)
+
+    cpdef int get_output_var_name_count(self):
+        cdef int count = 0
+        ok_or_raise(<int>bmi_get_output_var_name_count(self._bmi, &count))
+        return count
+
+    def get_output_var_names(self):
+        cdef list py_names = []
+        cdef char** names
+        cdef int i
+        cdef int count
+        cdef int status = 1
+
+        ok_or_raise(<int>bmi_get_output_var_name_count(self._bmi, &count))
+
+        try:
+            names = <char**>malloc(count * sizeof(char*))
+            names[0] = <char*>malloc(count * BMI_MAXVARNAMESTR * sizeof(char))
+            for i in range(1, count):
+                names[i] = names[i - 1] + BMI_MAXVARNAMESTR
+
+            ok_or_raise(<int>bmi_get_output_var_names(self._bmi, names))
 
             for i in range(count):
                 py_names.append(names[i].decode('utf-8'))
