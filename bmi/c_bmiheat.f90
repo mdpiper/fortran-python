@@ -60,20 +60,21 @@ contains
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent (in), value :: n
     character (len=1, kind=c_char), intent (out) :: name(n)
+
     integer (c_int) :: i, status
-    character (len=n, kind=c_char), pointer :: name_
+    character (len=n, kind=c_char), pointer :: pname
+    character (len=n, kind=c_char) :: name_
 
-    ! Convert `name` from rank-1 array to scalar.
-    do i = 1, n
-       name_(i:i) = name(i)
-    enddo
+    status = model_array(model_index)%get_component_name(pname)
 
-    status = model_array(model_index)%get_component_name(name_)
+    ! Cast `pname` back to a string, dereferences `pname`.
+    name_ = pname
 
-    ! Load the `_name` result, trimmed, back into `name` for output.
+    ! Load the `name_` string, trimmed, back into `name` for output.
     do i = 1, len(trim(name_))
         name(i) = name_(i:i)
     enddo
+    name = name//C_NULL_CHAR
   end function bmi_get_component_name
 
 end module c_bmiheat
