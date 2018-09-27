@@ -16,8 +16,8 @@ int main(int argc, char *argv[]) {
   status = bmi_initialize(model, config_file, nchars);
   printf("Status: %d\n", status);
 
-  component_name = malloc(BMI_MAX_COMPONENT_NAME);
-  status = bmi_get_component_name(model, component_name, BMI_MAX_COMPONENT_NAME);
+  component_name = malloc(BMI_MAXCOMPNAMESTR);
+  status = bmi_get_component_name(model, component_name, BMI_MAXCOMPNAMESTR);
   printf("Component name: %s\n", component_name);
   printf("Status: %d\n", status);
 

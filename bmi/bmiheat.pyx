@@ -3,6 +3,7 @@ cimport numpy as np
 
 
 cdef extern from "c_bmiheat.h":
+    int BMI_MAXCOMPNAMESTR
     int bmi_new()
     int bmi_initialize(int model, char *config_file, int n)
     int bmi_finalize(int model)
@@ -17,7 +18,6 @@ def ok_or_raise(status):
 cdef class Heat:
 
     cdef int _bmi
-    BMI_MAXCOMPNAMESTR = 2048  # from "bmi.f90"
 
     def __cinit__(self):
         self._bmi = bmi_new()
@@ -37,8 +37,8 @@ cdef class Heat:
         ok_or_raise(status)
 
     def get_component_name(self):
-        name = ' '*self.BMI_MAXCOMPNAMESTR
+        name = ' '*BMI_MAXCOMPNAMESTR
         bname = bytes(name.encode('utf-8'))
         ok_or_raise(bmi_get_component_name(self._bmi, bname,
-                                           self.BMI_MAXCOMPNAMESTR))
+                                           BMI_MAXCOMPNAMESTR))
         return bname.decode('utf-8').rstrip()
