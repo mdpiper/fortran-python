@@ -10,6 +10,9 @@ m = Heat()
 print(m.get_component_name())
 
 m.initialize(config_file)
+
+print(m.get_input_var_names())
+
 m.finalize()
 
 # Check that number of instances can't exceed N_MODELS=3.
