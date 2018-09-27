@@ -13,6 +13,6 @@ m.initialize(config_file)
 m.finalize()
 
 # Check that number of instances can't exceed N_MODELS=3.
-a = Heat()
-b = Heat()
-c = Heat()  # should fail with index=-1
+# a = Heat()
+# b = Heat()
+# c = Heat()  # should fail with index=-1
