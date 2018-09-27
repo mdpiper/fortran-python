@@ -11,3 +11,6 @@ int bmi_get_input_var_name_count(int model, int *n);
 int bmi_get_input_var_names(int model, char **names);
 int bmi_get_output_var_name_count(int model, int *n);
 int bmi_get_output_var_names(int model, char **names);
+int bmi_get_start_time(int model, float *time);
+int bmi_get_end_time(int model, float *time);
+int bmi_get_current_time(int model, float *time);

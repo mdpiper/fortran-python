@@ -14,6 +14,10 @@ m.initialize(config_file)
 print('In:', m.get_input_var_names())
 print('Out:', m.get_output_var_names())
 
+print('Start time:', m.get_start_time())
+print('End time:', m.get_end_time())
+print('Current time:', m.get_current_time())
+
 m.finalize()
 
 # Check that number of instances can't exceed N_MODELS=3.

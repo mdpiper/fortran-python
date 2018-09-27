@@ -127,4 +127,31 @@ contains
     enddo
   end function bmi_get_output_var_names
 
+  ! Get the model start time.
+  function bmi_get_start_time(model_index, time) bind(c) result(status)
+    integer (c_int), intent(in), value :: model_index
+    real (c_float), intent (out) :: time
+    integer (c_int) :: status
+
+    status = model_array(model_index)%get_start_time(time)
+  end function bmi_get_start_time
+
+  ! Get the model stop time.
+  function bmi_get_end_time(model_index, time) bind(c) result(status)
+    integer (c_int), intent(in), value :: model_index
+    real (c_float), intent (out) :: time
+    integer (c_int) :: status
+
+    status = model_array(model_index)%get_end_time(time)
+  end function bmi_get_end_time
+
+  ! Get the current model time.
+  function bmi_get_current_time(model_index, time) bind(c) result(status)
+    integer (c_int), intent(in), value :: model_index
+    real (c_float), intent (out) :: time
+    integer (c_int) :: status
+
+    status = model_array(model_index)%get_current_time(time)
+  end function bmi_get_current_time
+
 end module c_bmiheat

@@ -14,6 +14,9 @@ cdef extern from "c_bmiheat.h":
     int bmi_get_input_var_names(int model, char **names)
     int bmi_get_output_var_name_count(int model, int *n)
     int bmi_get_output_var_names(int model, char **names)
+    int bmi_get_start_time(int model, float *time)
+    int bmi_get_end_time(int model, float *time)
+    int bmi_get_current_time(int model, float *time)
 
 
 def ok_or_raise(status):
@@ -114,3 +117,18 @@ cdef class Heat:
             free(names)
 
         return tuple(py_names)
+
+    def get_start_time(self):
+        cdef float time
+        ok_or_raise(<int>bmi_get_start_time(self._bmi, &time))
+        return time
+
+    def get_end_time(self):
+        cdef float time
+        ok_or_raise(<int>bmi_get_end_time(self._bmi, &time))
+        return time
+
+    def get_current_time(self):
+        cdef float time
+        ok_or_raise(<int>bmi_get_current_time(self._bmi, &time))
+        return time

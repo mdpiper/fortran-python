@@ -10,6 +10,7 @@ int main(int argc, char *argv[]) {
   int nchars = strlen(config_file);
   char *component_name;
   char **input_var_names, **output_var_names;
+  float time;
 
   model = bmi_new();
   printf("Model %d\n", model);
@@ -53,6 +54,13 @@ int main(int argc, char *argv[]) {
     printf("  - %s\n", output_var_names[i]);
   }
   free(output_var_names);
+
+  status = bmi_get_start_time(model, &time);
+  printf("- model start time: %6.1f\n", time);
+  status = bmi_get_end_time(model, &time);
+  printf("- model stop time: %6.1f\n", time);
+  status = bmi_get_current_time(model, &time);
+  printf("- model current time: %6.1f\n", time);
 
   status = bmi_finalize(model);
   printf("- finalize status: %d\n", status);
