@@ -7,3 +7,5 @@ int bmi_new(void);
 int bmi_initialize(int model, char *config_file, int n);
 int bmi_finalize(int model);
 int bmi_get_component_name(int model, char *name, int n);
+int bmi_get_input_var_name_count(int model, int *n);
+int bmi_get_input_var_names(int model, char **names);

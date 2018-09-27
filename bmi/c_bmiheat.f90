@@ -77,4 +77,29 @@ contains
     name = name//C_NULL_CHAR
   end function bmi_get_component_name
 
+  ! Get the number of input variables.
+  function bmi_get_input_var_name_count(model_index, count) bind(c) result(status)
+    integer (c_int), intent(in), value :: model_index
+    integer (c_int), intent (out) :: count
+    integer (c_int) :: status
+
+    count = input_item_count  ! defined in bmi_heat.f90
+    status = BMI_SUCCESS
+  end function bmi_get_input_var_name_count
+
+  ! Get the names of the input variables.
+  function bmi_get_input_var_names(model_index, names) bind(c) result(status)
+    integer (c_int), intent(in), value :: model_index
+    type (c_ptr), dimension(input_item_count),  intent(out) :: names
+    integer (c_int) :: status, i
+    character (len=BMI_MAXVARNAMESTR), dimension(:), pointer :: pnames
+
+    status = model_array(model_index)%get_input_var_names(pnames)
+
+    do i = 1, input_item_count
+       pnames(i) = trim(pnames(i))//C_NULL_CHAR
+       names(i) = c_loc(pnames(i))
+    enddo
+  end function bmi_get_input_var_names
+
 end module c_bmiheat
