@@ -13,21 +13,23 @@ int main(int argc, char *argv[]) {
   float time;
   char *units;
 
+  // Get a new model.
   model = bmi_new();
   printf("Model %d\n", model);
 
+  // Initialize the model.
   status = bmi_initialize(model, config_file, nchars);
   printf("- initialize status: %d\n", status);
 
+  // Get the model's name.
   component_name = malloc(BMI_MAXCOMPNAMESTR);
   status = bmi_get_component_name(model, component_name, BMI_MAXCOMPNAMESTR);
   printf("- component name: %s\n", component_name);
   free(component_name);
 
+  // Get the model's inputs. Pointers to pointers, oh my.
   status = bmi_get_input_var_name_count(model, &n_invars);
   printf("- number of input vars: %d\n", n_invars);
-
-  // Pointers to pointers, oh my.
   input_var_names = malloc(n_invars);
   input_var_names[0] = malloc(BMI_MAXVARNAMESTR);
   for (i = 1; i < n_invars; i++) {
@@ -40,10 +42,9 @@ int main(int argc, char *argv[]) {
   }
   free(input_var_names);
 
+  // Get the model's outputs.
   status = bmi_get_output_var_name_count(model, &n_outvars);
   printf("- number of output vars: %d\n", n_outvars);
-
-  // Pointers to pointers, oh my.
   output_var_names = malloc(n_outvars);
   output_var_names[0] = malloc(BMI_MAXVARNAMESTR);
   for (i = 1; i < n_outvars; i++) {
@@ -56,6 +57,7 @@ int main(int argc, char *argv[]) {
   }
   free(output_var_names);
 
+  // Get time information from the model.
   status = bmi_get_start_time(model, &time);
   printf("- model start time: %6.1f\n", time);
   status = bmi_get_end_time(model, &time);
@@ -69,6 +71,13 @@ int main(int argc, char *argv[]) {
   printf("- model time units: %s\n", units);
   free(units);
 
+  // Update the model by a single time step.
+  status = bmi_update(model);
+  printf("- update status: %d\n", status);
+  status = bmi_get_current_time(model, &time);
+  printf("- model current time: %6.1f\n", time);
+
+  // Finalize the model.
   status = bmi_finalize(model);
   printf("- finalize status: %d\n", status);
 }

@@ -20,6 +20,7 @@ cdef extern from "c_bmiheat.h":
     int bmi_get_current_time(int model, float *time)
     int bmi_get_time_step(int model, float *time_step)
     int bmi_get_time_units(int model, char *time_units, int n)
+    int bmi_update(int model)
 
 
 def ok_or_raise(status):
@@ -147,3 +148,7 @@ cdef class Heat:
         ok_or_raise(bmi_get_time_units(self._bmi, bunits,
                                        BMI_MAXUNITSSTR))
         return bunits.decode('utf-8').rstrip()
+
+    def update(self):
+        status = bmi_update(self._bmi)
+        ok_or_raise(status)

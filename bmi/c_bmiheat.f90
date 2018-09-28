@@ -186,4 +186,12 @@ contains
     time_units = time_units//C_NULL_CHAR
   end function bmi_get_time_units
 
+  ! Advance the model by one time step.
+  function bmi_update(model_index) bind(c) result(status)
+    integer (c_int), intent(in), value :: model_index
+    integer (c_int) :: status
+
+    status = model_array(model_index)%update()
+  end function bmi_update
+
 end module c_bmiheat
