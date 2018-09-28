@@ -4,16 +4,16 @@
 #define BMI_MAXUNITSSTR (2048)
 
 int bmi_new(void);
-int bmi_initialize(int, char *, int);
-int bmi_finalize(int);
-int bmi_get_component_name(int, char *, int);
-int bmi_get_input_var_name_count(int, int *);
-int bmi_get_input_var_names(int, char **);
-int bmi_get_output_var_name_count(int, int *);
-int bmi_get_output_var_names(int, char **);
-int bmi_get_start_time(int, float *);
-int bmi_get_end_time(int, float *);
-int bmi_get_current_time(int, float *);
-int bmi_get_time_step(int, float *);
-int bmi_get_time_units(int, char *, int);
-int bmi_update(int);
+int bmi_initialize(int model, char *config_file, int n);
+int bmi_finalize(int model);
+int bmi_get_component_name(int model, char *name, int n);
+int bmi_get_input_var_name_count(int model, int *n);
+int bmi_get_input_var_names(int model, char **names);
+int bmi_get_output_var_name_count(int model, int *n);
+int bmi_get_output_var_names(int model, char **names);
+int bmi_get_start_time(int model, float *time);
+int bmi_get_end_time(int model, float *time);
+int bmi_get_current_time(int model, float *time);
+int bmi_get_time_step(int model, float *time_step);
+int bmi_get_time_units(int model, char *time_units, int n);
+int bmi_update(int model);
