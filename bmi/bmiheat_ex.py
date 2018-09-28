@@ -27,6 +27,14 @@ print('Time units:', m.get_time_units())
 m.update()
 print('Current time:', m.get_current_time())
 
+# Advance the model by a fractional time step.
+m.update_frac(0.75)
+print('Current time:', m.get_current_time())
+
+# Advance the model until a later time.
+m.update_until(10.0)
+print('Current time:', m.get_current_time())
+
 # Finalize the model.
 m.finalize()
 

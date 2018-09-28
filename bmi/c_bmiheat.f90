@@ -194,4 +194,22 @@ contains
     status = model_array(model_index)%update()
   end function bmi_update
 
+  ! Advance the model by a fraction of a time step.
+  function bmi_update_frac(model_index, time_frac) bind(c) result(status)
+    integer (c_int), intent(in), value :: model_index
+    real (c_float), intent (in), value :: time_frac
+    integer (c_int) :: status
+
+    status = model_array(model_index)%update_frac(time_frac)
+  end function bmi_update_frac
+
+  ! Advance the model to a time in the future.
+  function bmi_update_until(model_index, time_later) bind(c) result(status)
+    integer (c_int), intent(in), value :: model_index
+    real (c_float), intent (in), value :: time_later
+    integer (c_int) :: status
+
+    status = model_array(model_index)%update_until(time_later)
+  end function bmi_update_until
+
 end module c_bmiheat

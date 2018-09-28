@@ -77,6 +77,18 @@ int main(int argc, char *argv[]) {
   status = bmi_get_current_time(model, &time);
   printf("- model current time: %6.1f\n", time);
 
+  // Update the model by a fraction of a time step.
+  status = bmi_update_frac(model, 0.75);
+  printf("- update_frac status: %d\n", status);
+  status = bmi_get_current_time(model, &time);
+  printf("- model current time: %6.1f\n", time);
+
+  // Update the model until a later time.
+  status = bmi_update_until(model, 10.0);
+  printf("- update_until status: %d\n", status);
+  status = bmi_get_current_time(model, &time);
+  printf("- model current time: %6.1f\n", time);
+
   // Finalize the model.
   status = bmi_finalize(model);
   printf("- finalize status: %d\n", status);

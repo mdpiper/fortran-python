@@ -21,6 +21,8 @@ cdef extern from "c_bmiheat.h":
     int bmi_get_time_step(int model, float *time_step)
     int bmi_get_time_units(int model, char *time_units, int n)
     int bmi_update(int model)
+    int bmi_update_frac(int model, float time_frac)
+    int bmi_update_until(int model, float time_later)
 
 
 def ok_or_raise(status):
@@ -151,4 +153,12 @@ cdef class Heat:
 
     def update(self):
         status = bmi_update(self._bmi)
+        ok_or_raise(status)
+
+    def update_frac(self, time_frac):
+        status = bmi_update_frac(self._bmi, time_frac)
+        ok_or_raise(status)
+
+    def update_until(self, time_later):
+        status = bmi_update_until(self._bmi, time_later)
         ok_or_raise(status)
