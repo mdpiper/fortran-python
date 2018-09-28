@@ -154,4 +154,36 @@ contains
     status = model_array(model_index)%get_current_time(time)
   end function bmi_get_current_time
 
+  ! Get the model time step.
+  function bmi_get_time_step(model_index, time_step) bind(c) result(status)
+    integer (c_int), intent(in), value :: model_index
+    real (c_float), intent (out) :: time_step
+    integer (c_int) :: status
+
+    status = model_array(model_index)%get_time_step(time_step)
+  end function bmi_get_time_step
+
+  ! Get the model time units.
+  function bmi_get_time_units(model_index, time_units, n) bind(c) result(status)
+    integer (c_int), intent(in), value :: model_index
+    integer (c_int), intent (in), value :: n
+    character (len=1, kind=c_char), intent (out) :: time_units(n)
+
+    integer (c_int) :: i, status
+    character (len=n, kind=c_char) :: time_units_
+
+    ! Convert `time_units` from rank-1 array to scalar.
+    do i = 1, n
+       time_units_(i:i) = time_units(i)
+    enddo
+
+    status = model_array(model_index)%get_time_units(time_units_)
+
+    ! Load the `time_units_` result back into `time_units` for output.
+    do i = 1, len(trim(time_units_))
+        time_units(i) = time_units_(i:i)
+    enddo
+    time_units = time_units//C_NULL_CHAR
+  end function bmi_get_time_units
+
 end module c_bmiheat

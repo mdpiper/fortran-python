@@ -14,3 +14,5 @@ int bmi_get_output_var_names(int, char **);
 int bmi_get_start_time(int, float *);
 int bmi_get_end_time(int, float *);
 int bmi_get_current_time(int, float *);
+int bmi_get_time_step(int, float *);
+int bmi_get_time_units(int, char *, int);

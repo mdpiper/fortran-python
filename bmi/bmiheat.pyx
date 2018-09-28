@@ -6,6 +6,7 @@ cimport numpy as np
 cdef extern from "c_bmiheat.h":
     int BMI_MAXCOMPNAMESTR
     int BMI_MAXVARNAMESTR
+    int BMI_MAXUNITSSTR
     int bmi_new()
     int bmi_initialize(int model, char *config_file, int n)
     int bmi_finalize(int model)
@@ -17,6 +18,8 @@ cdef extern from "c_bmiheat.h":
     int bmi_get_start_time(int model, float *time)
     int bmi_get_end_time(int model, float *time)
     int bmi_get_current_time(int model, float *time)
+    int bmi_get_time_step(int model, float *time_step)
+    int bmi_get_time_units(int model, char *time_units, int n)
 
 
 def ok_or_raise(status):
@@ -132,3 +135,15 @@ cdef class Heat:
         cdef float time
         ok_or_raise(<int>bmi_get_current_time(self._bmi, &time))
         return time
+
+    def get_time_step(self):
+        cdef float step
+        ok_or_raise(<int>bmi_get_time_step(self._bmi, &step))
+        return step
+
+    def get_time_units(self):
+        units = ' '*BMI_MAXUNITSSTR
+        bunits = bytes(units.encode('utf-8'))
+        ok_or_raise(bmi_get_time_units(self._bmi, bunits,
+                                       BMI_MAXUNITSSTR))
+        return bunits.decode('utf-8').rstrip()

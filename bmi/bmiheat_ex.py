@@ -17,6 +17,8 @@ print('Out:', m.get_output_var_names())
 print('Start time:', m.get_start_time())
 print('End time:', m.get_end_time())
 print('Current time:', m.get_current_time())
+print('Time step:', m.get_time_step())
+print('Time units:', m.get_time_units())
 
 m.finalize()
 

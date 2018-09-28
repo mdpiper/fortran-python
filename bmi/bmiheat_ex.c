@@ -11,6 +11,7 @@ int main(int argc, char *argv[]) {
   char *component_name;
   char **input_var_names, **output_var_names;
   float time;
+  char *units;
 
   model = bmi_new();
   printf("Model %d\n", model);
@@ -61,6 +62,12 @@ int main(int argc, char *argv[]) {
   printf("- model stop time: %6.1f\n", time);
   status = bmi_get_current_time(model, &time);
   printf("- model current time: %6.1f\n", time);
+  status = bmi_get_time_step(model, &time);
+  printf("- model time step: %6.1f\n", time);
+  units = malloc(BMI_MAXUNITSSTR);
+  status = bmi_get_time_units(model, units, BMI_MAXUNITSSTR);
+  printf("- model time units: %s\n", units);
+  free(units);
 
   status = bmi_finalize(model);
   printf("- finalize status: %d\n", status);
