@@ -19,3 +19,4 @@ int bmi_get_time_units(int model, char *time_units, int n);
 int bmi_update(int model);
 int bmi_update_frac(int model, float time_frac);
 int bmi_update_until(int model, float time_later);
+int bmi_get_var_grid(int model, char *var_name, int n, int *grid_id);

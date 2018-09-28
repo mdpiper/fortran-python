@@ -23,6 +23,7 @@ cdef extern from "c_bmiheat.h":
     int bmi_update(int model)
     int bmi_update_frac(int model, float time_frac)
     int bmi_update_until(int model, float time_later)
+    int bmi_get_var_grid(int model, char *var_name, int n, int *grid_id)
 
 
 def ok_or_raise(status):
@@ -162,3 +163,11 @@ cdef class Heat:
     def update_until(self, time_later):
         status = bmi_update_until(self._bmi, time_later)
         ok_or_raise(status)
+
+    def get_var_grid(self, var_name):
+        cdef int grid_id
+        n = len(var_name)
+        _var_name = bytes(var_name.encode('utf-8'))
+        ok_or_raise(<int>bmi_get_var_grid(self._bmi, _var_name, n,
+                                          &grid_id))
+        return grid_id

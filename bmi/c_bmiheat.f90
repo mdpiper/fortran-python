@@ -212,4 +212,21 @@ contains
     status = model_array(model_index)%update_until(time_later)
   end function bmi_update_until
 
+  ! Get the grid identifier for a given variable.
+  function bmi_get_var_grid(model_index, var_name, n, grid_id) bind(c) result(status)
+    integer (c_int), intent(in), value :: model_index
+    integer (c_int), intent (in), value :: n
+    character (len=1, kind=c_char), intent (in) :: var_name(n)
+    integer (c_int), intent (out) :: grid_id
+    integer (c_int) :: i, status
+    character (len=n, kind=c_char) :: var_name_
+
+    ! Convert `var_name` from rank-1 array to scalar.
+    do i = 1, n
+       var_name_(i:i) = var_name(i)
+    enddo
+
+    status = model_array(model_index)%get_var_grid(var_name_, grid_id)
+  end function bmi_get_var_grid
+
 end module c_bmiheat

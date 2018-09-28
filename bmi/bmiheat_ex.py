@@ -35,6 +35,11 @@ print('Current time:', m.get_current_time())
 m.update_until(10.0)
 print('Current time:', m.get_current_time())
 
+# Get the grid_id for the plate_surface__temperature variable.
+var_name = 'plate_surface__temperature'
+grid_id = m.get_var_grid(var_name)
+print('Grid id for plate_surface__temperature:', grid_id)
+
 # Finalize the model.
 m.finalize()
 

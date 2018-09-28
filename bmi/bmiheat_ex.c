@@ -12,6 +12,8 @@ int main(int argc, char *argv[]) {
   char **input_var_names, **output_var_names;
   float time;
   char *units;
+  char *var_name;
+  int grid_id;
 
   // Get a new model.
   model = bmi_new();
@@ -88,6 +90,12 @@ int main(int argc, char *argv[]) {
   printf("- update_until status: %d\n", status);
   status = bmi_get_current_time(model, &time);
   printf("- model current time: %6.1f\n", time);
+
+  // Get the grid_id for one of the input variables.
+  var_name = "plate_surface__temperature";
+  nchars = strlen(var_name);
+  status = bmi_get_var_grid(model, var_name, nchars, &grid_id);
+  printf("- grid_id for plate_surface__temperature: %d\n", grid_id);
 
   // Finalize the model.
   status = bmi_finalize(model);
