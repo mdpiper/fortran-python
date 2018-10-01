@@ -40,6 +40,9 @@ var_name = 'plate_surface__temperature'
 grid_id = m.get_var_grid(var_name)
 print('Grid id for plate_surface__temperature:', grid_id)
 
+# Get grid info for the plate_surface__temperature variable.
+print(' - Grid type:', m.get_grid_type(grid_id))
+
 # Finalize the model.
 m.finalize()
 

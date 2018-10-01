@@ -229,4 +229,26 @@ contains
     status = model_array(model_index)%get_var_grid(var_name_, grid_id)
   end function bmi_get_var_grid
 
+  ! Get the grid type for the specified variable.
+  function bmi_get_grid_type(model_index, grid_id, grid_type, n) bind(c) result(status)
+    integer (c_int), intent(in), value :: model_index
+    integer (c_int), intent (in), value :: grid_id
+    integer (c_int), intent (in), value :: n
+    character (len=1, kind=c_char), intent (out) :: grid_type(n)
+
+    integer (c_int) :: i, status
+    character (len=n, kind=c_char) :: grid_type_
+
+    do i = 1, n
+       grid_type_(i:i) = grid_type(i)
+    enddo
+
+    status = model_array(model_index)%get_grid_type(grid_id, grid_type_)
+
+    do i = 1, len(trim(grid_type_))
+        grid_type(i) = grid_type_(i:i)
+    enddo
+    grid_type = grid_type//C_NULL_CHAR
+  end function bmi_get_grid_type
+
 end module c_bmiheat

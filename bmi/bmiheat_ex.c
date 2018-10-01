@@ -14,6 +14,7 @@ int main(int argc, char *argv[]) {
   char *units;
   char *var_name;
   int grid_id;
+  char *grid_type;
 
   // Get a new model.
   model = bmi_new();
@@ -96,6 +97,13 @@ int main(int argc, char *argv[]) {
   nchars = strlen(var_name);
   status = bmi_get_var_grid(model, var_name, nchars, &grid_id);
   printf("- grid_id for plate_surface__temperature: %d\n", grid_id);
+
+  // Get grid information for the plate_surface__temperature variable.
+  grid_type = malloc(BMI_MAXUNITSSTR);
+  memset(grid_type, 0, BMI_MAXUNITSSTR);
+  status = bmi_get_grid_type(model, grid_id, grid_type, BMI_MAXUNITSSTR);
+  printf("- grid type: %s\n", grid_type);
+  free(grid_type);
 
   // Finalize the model.
   status = bmi_finalize(model);
