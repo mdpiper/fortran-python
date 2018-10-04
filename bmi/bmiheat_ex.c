@@ -16,6 +16,7 @@ int main(int argc, char *argv[]) {
   int grid_id;
   char *grid_type;
   int rank;
+  int *shape;
 
   // Get a new model.
   model = bmi_new();
@@ -106,6 +107,16 @@ int main(int argc, char *argv[]) {
   printf("- grid type: %s\n", grid_type);
   free(grid_type);
   status = bmi_get_grid_rank(model, grid_id, &rank);
+  printf("- grid rank: %d\n", rank);
+  shape = malloc(rank * sizeof(int));
+  /* status = bmi_get_grid_shape(model, grid_id, &shape[0]); */
+  status = bmi_get_grid_shape(model, grid_id, shape, rank);
+  printf("- grid shape:");
+  for (i = 0; i < rank; i++) {
+    printf(" %d", shape[i]);
+  }
+  printf("\n");
+  free(shape);
 
   // Finalize the model.
   status = bmi_finalize(model);

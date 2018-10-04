@@ -260,6 +260,16 @@ contains
     status = model_array(model_index)%get_grid_rank(grid_id, grid_rank)
   end function bmi_get_grid_rank
 
+  function bmi_get_grid_shape(model_index, grid_id, grid_shape, n) bind(c) result(status)
+    integer (c_int), intent(in), value :: model_index
+    integer (c_int), intent(in), value :: grid_id
+    integer (c_int), intent(in), value :: n
+    integer (c_int), intent(out) :: grid_shape(n)
+    integer (c_int) :: status
+
+    status = model_array(model_index)%get_grid_shape(grid_id, grid_shape)
+  end function bmi_get_grid_shape
+
   function bmi_get_grid_size(model_index, grid_id, grid_size) bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent (in), value :: grid_id
@@ -268,5 +278,25 @@ contains
 
     status = model_array(model_index)%get_grid_size(grid_id, grid_size)
   end function bmi_get_grid_size
+
+  function bmi_get_grid_spacing(model_index, grid_id, grid_spacing, n) bind(c) result(status)
+    integer (c_int), intent(in), value :: model_index
+    integer (c_int), intent(in), value :: grid_id
+    integer (c_int), intent(in), value :: n
+    real (c_float), intent(out) :: grid_spacing(n)
+    integer (c_int) :: status
+
+    status = model_array(model_index)%get_grid_spacing(grid_id, grid_spacing)
+  end function bmi_get_grid_spacing
+
+  function bmi_get_grid_origin(model_index, grid_id, grid_origin, n) bind(c) result(status)
+    integer (c_int), intent(in), value :: model_index
+    integer (c_int), intent(in), value :: grid_id
+    integer (c_int), intent(in), value :: n
+    real (c_float), intent(out) :: grid_origin(n)
+    integer (c_int) :: status
+
+    status = model_array(model_index)%get_grid_origin(grid_id, grid_origin)
+  end function bmi_get_grid_origin
 
 end module c_bmiheat
