@@ -11,7 +11,9 @@ module c_bmiheat
 
 contains
 
+  !
   ! Find the next unused model index in the array.
+  !
   function bmi_new() bind(c) result(model_index)
     integer (c_int) :: model_index
     integer :: i
@@ -31,11 +33,14 @@ contains
     end if
   end function bmi_new
 
+  !
   ! Initialize one model in the array, based on the input index.
-  function bmi_initialize(model_index, config_file, n) bind(c) result(status)
+  !
+  function bmi_initialize(model_index, config_file, n) &
+       bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
-    integer (c_int), intent (in), value :: n
-    character (len=1, kind=c_char), intent (in) :: config_file(n)
+    integer (c_int), intent(in), value :: n
+    character (len=1, kind=c_char), intent(in) :: config_file(n)
     integer (c_int) :: i, status
     character (len=n, kind=c_char) :: config_file_
 
@@ -47,7 +52,9 @@ contains
     status = model_array(model_index)%initialize(config_file_)
   end function bmi_initialize
 
+  !
   ! Clean up one model in the array.
+  !
   function bmi_finalize(model_index) bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     integer (c_int) :: status
@@ -55,11 +62,14 @@ contains
     status = model_array(model_index)%finalize()
   end function bmi_finalize
 
+  !
   ! Get the component name attribute.
-  function bmi_get_component_name(model_index, name, n) bind(c) result(status)
+  !
+  function bmi_get_component_name(model_index, name, n) &
+       bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
-    integer (c_int), intent (in), value :: n
-    character (len=1, kind=c_char), intent (out) :: name(n)
+    integer (c_int), intent(in), value :: n
+    character (len=1, kind=c_char), intent(out) :: name(n)
 
     integer (c_int) :: i, status
     character (len=n, kind=c_char), pointer :: pname
@@ -77,18 +87,24 @@ contains
     name = name//C_NULL_CHAR
   end function bmi_get_component_name
 
+  !
   ! Get the number of input variables.
-  function bmi_get_input_var_name_count(model_index, count) bind(c) result(status)
+  !
+  function bmi_get_input_var_name_count(model_index, count) &
+       bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
-    integer (c_int), intent (out) :: count
+    integer (c_int), intent(out) :: count
     integer (c_int) :: status
 
     count = input_item_count  ! defined in bmi_heat.f90
     status = BMI_SUCCESS
   end function bmi_get_input_var_name_count
 
+  !
   ! Get the names of the input variables.
-  function bmi_get_input_var_names(model_index, names) bind(c) result(status)
+  !
+  function bmi_get_input_var_names(model_index, names) &
+       bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     type (c_ptr), dimension(input_item_count),  intent(out) :: names
     integer (c_int) :: status, i
@@ -102,18 +118,24 @@ contains
     enddo
   end function bmi_get_input_var_names
 
+  !
   ! Get the number of output variables.
-  function bmi_get_output_var_name_count(model_index, count) bind(c) result(status)
+  !
+  function bmi_get_output_var_name_count(model_index, count) &
+       bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
-    integer (c_int), intent (out) :: count
+    integer (c_int), intent(out) :: count
     integer (c_int) :: status
 
     count = output_item_count  ! defined in bmi_heat.f90
     status = BMI_SUCCESS
   end function bmi_get_output_var_name_count
 
+  !
   ! Get the names of the output variables.
-  function bmi_get_output_var_names(model_index, names) bind(c) result(status)
+  !
+  function bmi_get_output_var_names(model_index, names) &
+       bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     type (c_ptr), dimension(output_item_count),  intent(out) :: names
     integer (c_int) :: status, i
@@ -127,47 +149,59 @@ contains
     enddo
   end function bmi_get_output_var_names
 
+  !
   ! Get the model start time.
+  !
   function bmi_get_start_time(model_index, time) bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
-    real (c_float), intent (out) :: time
+    real (c_float), intent(out) :: time
     integer (c_int) :: status
 
     status = model_array(model_index)%get_start_time(time)
   end function bmi_get_start_time
 
+  !
   ! Get the model stop time.
+  !
   function bmi_get_end_time(model_index, time) bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
-    real (c_float), intent (out) :: time
+    real (c_float), intent(out) :: time
     integer (c_int) :: status
 
     status = model_array(model_index)%get_end_time(time)
   end function bmi_get_end_time
 
+  !
   ! Get the current model time.
+  !
   function bmi_get_current_time(model_index, time) bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
-    real (c_float), intent (out) :: time
+    real (c_float), intent(out) :: time
     integer (c_int) :: status
 
     status = model_array(model_index)%get_current_time(time)
   end function bmi_get_current_time
 
+  !
   ! Get the model time step.
-  function bmi_get_time_step(model_index, time_step) bind(c) result(status)
+  !
+  function bmi_get_time_step(model_index, time_step) &
+       bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
-    real (c_float), intent (out) :: time_step
+    real (c_float), intent(out) :: time_step
     integer (c_int) :: status
 
     status = model_array(model_index)%get_time_step(time_step)
   end function bmi_get_time_step
 
+  !
   ! Get the model time units.
-  function bmi_get_time_units(model_index, time_units, n) bind(c) result(status)
+  !
+  function bmi_get_time_units(model_index, time_units, n) &
+       bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
-    integer (c_int), intent (in), value :: n
-    character (len=1, kind=c_char), intent (out) :: time_units(n)
+    integer (c_int), intent(in), value :: n
+    character (len=1, kind=c_char), intent(out) :: time_units(n)
 
     integer (c_int) :: i, status
     character (len=n, kind=c_char) :: time_units_
@@ -186,7 +220,9 @@ contains
     time_units = time_units//C_NULL_CHAR
   end function bmi_get_time_units
 
+  !
   ! Advance the model by one time step.
+  !
   function bmi_update(model_index) bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     integer (c_int) :: status
@@ -194,30 +230,37 @@ contains
     status = model_array(model_index)%update()
   end function bmi_update
 
+  !
   ! Advance the model by a fraction of a time step.
+  !
   function bmi_update_frac(model_index, time_frac) bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
-    real (c_float), intent (in), value :: time_frac
+    real (c_float), intent(in), value :: time_frac
     integer (c_int) :: status
 
     status = model_array(model_index)%update_frac(time_frac)
   end function bmi_update_frac
 
+  !
   ! Advance the model to a time in the future.
+  !
   function bmi_update_until(model_index, time_later) bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
-    real (c_float), intent (in), value :: time_later
+    real (c_float), intent(in), value :: time_later
     integer (c_int) :: status
 
     status = model_array(model_index)%update_until(time_later)
   end function bmi_update_until
 
+  !
   ! Get the grid identifier for a given variable.
-  function bmi_get_var_grid(model_index, var_name, n, grid_id) bind(c) result(status)
+  !
+  function bmi_get_var_grid(model_index, var_name, n, grid_id) &
+       bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
-    integer (c_int), intent (in), value :: n
-    character (len=1, kind=c_char), intent (in) :: var_name(n)
-    integer (c_int), intent (out) :: grid_id
+    integer (c_int), intent(in), value :: n
+    character (len=1, kind=c_char), intent(in) :: var_name(n)
+    integer (c_int), intent(out) :: grid_id
     integer (c_int) :: i, status
     character (len=n, kind=c_char) :: var_name_
 
@@ -229,12 +272,15 @@ contains
     status = model_array(model_index)%get_var_grid(var_name_, grid_id)
   end function bmi_get_var_grid
 
+  !
   ! Get the grid type for the specified variable.
-  function bmi_get_grid_type(model_index, grid_id, grid_type, n) bind(c) result(status)
+  !
+  function bmi_get_grid_type(model_index, grid_id, grid_type, n) &
+       bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
-    integer (c_int), intent (in), value :: grid_id
-    integer (c_int), intent (in), value :: n
-    character (len=1, kind=c_char), intent (out) :: grid_type(n)
+    integer (c_int), intent(in), value :: grid_id
+    integer (c_int), intent(in), value :: n
+    character (len=1, kind=c_char), intent(out) :: grid_type(n)
 
     integer (c_int) :: i, status
     character (len=n, kind=c_char) :: grid_type_
@@ -251,16 +297,24 @@ contains
     grid_type = grid_type//C_NULL_CHAR
   end function bmi_get_grid_type
 
-  function bmi_get_grid_rank(model_index, grid_id, grid_rank) bind(c) result(status)
+  !
+  ! Get the number of dimensions of a grid.
+  !
+  function bmi_get_grid_rank(model_index, grid_id, grid_rank) &
+       bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
-    integer (c_int), intent (in), value :: grid_id
-    integer (c_int), intent (out) :: grid_rank
+    integer (c_int), intent(in), value :: grid_id
+    integer (c_int), intent(out) :: grid_rank
     integer (c_int) :: status
 
     status = model_array(model_index)%get_grid_rank(grid_id, grid_rank)
   end function bmi_get_grid_rank
 
-  function bmi_get_grid_shape(model_index, grid_id, grid_shape, n) bind(c) result(status)
+  !
+  ! Get the dimensions of a grid.
+  !
+  function bmi_get_grid_shape(model_index, grid_id, grid_shape, n) &
+       bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(in), value :: grid_id
     integer (c_int), intent(in), value :: n
@@ -270,16 +324,24 @@ contains
     status = model_array(model_index)%get_grid_shape(grid_id, grid_shape)
   end function bmi_get_grid_shape
 
-  function bmi_get_grid_size(model_index, grid_id, grid_size) bind(c) result(status)
+  !
+  ! Get the total number of elements in a grid.
+  !
+  function bmi_get_grid_size(model_index, grid_id, grid_size) &
+       bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
-    integer (c_int), intent (in), value :: grid_id
-    integer (c_int), intent (out) :: grid_size
+    integer (c_int), intent(in), value :: grid_id
+    integer (c_int), intent(out) :: grid_size
     integer (c_int) :: status
 
     status = model_array(model_index)%get_grid_size(grid_id, grid_size)
   end function bmi_get_grid_size
 
-  function bmi_get_grid_spacing(model_index, grid_id, grid_spacing, n) bind(c) result(status)
+  !
+  ! Get the spacing between grid elements in each dimension.
+  !
+  function bmi_get_grid_spacing(model_index, grid_id, grid_spacing, n) &
+       bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(in), value :: grid_id
     integer (c_int), intent(in), value :: n
@@ -289,7 +351,11 @@ contains
     status = model_array(model_index)%get_grid_spacing(grid_id, grid_spacing)
   end function bmi_get_grid_spacing
 
-  function bmi_get_grid_origin(model_index, grid_id, grid_origin, n) bind(c) result(status)
+  !
+  ! Get the origin of the grid.
+  !
+  function bmi_get_grid_origin(model_index, grid_id, grid_origin, n) &
+       bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(in), value :: grid_id
     integer (c_int), intent(in), value :: n
