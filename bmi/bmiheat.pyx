@@ -24,12 +24,12 @@ cdef extern from "c_bmiheat.h":
     int bmi_update_frac(int model, float time_frac)
     int bmi_update_until(int model, float time_later)
     int bmi_get_var_grid(int model, char *var_name, int n, int *grid_id)
-    int bmi_get_grid_type(int model, int grid_id, char *grid_type, int n)
-    int bmi_get_grid_rank(int model, int grid_id, int *grid_rank)
-    int bmi_get_grid_shape(int model, int grid_id, int *grid_shape)
-    int bmi_get_grid_size(int model, int grid_id, int *grid_size)
-    int bmi_get_grid_spacing(int model, int grid_id, float *grid_spacing)
-    int bmi_get_grid_origin(int model, int grid_id, float *grid_origin)
+    int bmi_get_grid_type(int model, int grid_id, char *type, int n)
+    int bmi_get_grid_rank(int model, int grid_id, int *rank)
+    int bmi_get_grid_shape(int model, int grid_id, int *shape, int rank)
+    int bmi_get_grid_size(int model, int grid_id, int *size)
+    int bmi_get_grid_spacing(int model, int grid_id, float *spacing, int rank)
+    int bmi_get_grid_origin(int model, int grid_id, float *origin, int rank)
 
 
 def ok_or_raise(status):
@@ -194,3 +194,27 @@ cdef class Heat:
         cdef int size
         ok_or_raise(<int>bmi_get_grid_size(self._bmi, grid_id, &size))
         return size
+
+    def get_grid_shape(self, grid_id):
+        cdef int rank = self.get_grid_rank(grid_id)
+        cdef np.ndarray[int, ndim=1, mode="c"] \
+            shape = np.empty(rank, dtype=np.intc)
+        ok_or_raise(<int>bmi_get_grid_shape(self._bmi, grid_id,
+                                            &shape[0], rank))
+        return shape
+
+    def get_grid_spacing(self, grid_id):
+        cdef int rank = self.get_grid_rank(grid_id)
+        cdef np.ndarray[float, ndim=1, mode="c"] \
+            spacing = np.empty(rank, dtype=np.float32)
+        ok_or_raise(<int>bmi_get_grid_spacing(self._bmi, grid_id,
+                                              &spacing[0], rank))
+        return spacing
+
+    def get_grid_origin(self, grid_id):
+        cdef int rank = self.get_grid_rank(grid_id)
+        cdef np.ndarray[float, ndim=1, mode="c"] \
+            origin = np.empty(rank, dtype=np.float32)
+        ok_or_raise(<int>bmi_get_grid_origin(self._bmi, grid_id,
+                                             &origin[0], rank))
+        return origin

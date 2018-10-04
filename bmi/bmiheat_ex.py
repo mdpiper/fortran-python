@@ -41,8 +41,12 @@ grid_id = m.get_var_grid(var_name)
 print('Grid id for plate_surface__temperature:', grid_id)
 
 # Get grid info for the plate_surface__temperature variable.
-print(' - Grid type:', m.get_grid_type(grid_id))
-print(' - Grid rank:', m.get_grid_rank(grid_id))
+print(' - type:', m.get_grid_type(grid_id))
+print(' - rank:', m.get_grid_rank(grid_id))
+print(' - shape:', m.get_grid_shape(grid_id))
+print(' - size:', m.get_grid_size(grid_id))
+print(' - spacing:', m.get_grid_spacing(grid_id))
+print(' - origin:', m.get_grid_origin(grid_id))
 
 # Finalize the model.
 m.finalize()
