@@ -15,6 +15,7 @@ int main(int argc, char *argv[]) {
   char *var_name;
   int grid_id;
   char *grid_type;
+  int rank;
 
   // Get a new model.
   model = bmi_new();
@@ -104,6 +105,7 @@ int main(int argc, char *argv[]) {
   status = bmi_get_grid_type(model, grid_id, grid_type, BMI_MAXUNITSSTR);
   printf("- grid type: %s\n", grid_type);
   free(grid_type);
+  status = bmi_get_grid_rank(model, grid_id, &rank);
 
   // Finalize the model.
   status = bmi_finalize(model);

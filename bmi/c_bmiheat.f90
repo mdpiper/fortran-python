@@ -251,4 +251,22 @@ contains
     grid_type = grid_type//C_NULL_CHAR
   end function bmi_get_grid_type
 
+  function bmi_get_grid_rank(model_index, grid_id, grid_rank) bind(c) result(status)
+    integer (c_int), intent(in), value :: model_index
+    integer (c_int), intent (in), value :: grid_id
+    integer (c_int), intent (out) :: grid_rank
+    integer (c_int) :: status
+
+    status = model_array(model_index)%get_grid_rank(grid_id, grid_rank)
+  end function bmi_get_grid_rank
+
+  function bmi_get_grid_size(model_index, grid_id, grid_size) bind(c) result(status)
+    integer (c_int), intent(in), value :: model_index
+    integer (c_int), intent (in), value :: grid_id
+    integer (c_int), intent (out) :: grid_size
+    integer (c_int) :: status
+
+    status = model_array(model_index)%get_grid_size(grid_id, grid_size)
+  end function bmi_get_grid_size
+
 end module c_bmiheat

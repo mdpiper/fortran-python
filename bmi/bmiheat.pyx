@@ -25,6 +25,11 @@ cdef extern from "c_bmiheat.h":
     int bmi_update_until(int model, float time_later)
     int bmi_get_var_grid(int model, char *var_name, int n, int *grid_id)
     int bmi_get_grid_type(int model, int grid_id, char *grid_type, int n)
+    int bmi_get_grid_rank(int model, int grid_id, int *grid_rank)
+    int bmi_get_grid_shape(int model, int grid_id, int *grid_shape)
+    int bmi_get_grid_size(int model, int grid_id, int *grid_size)
+    int bmi_get_grid_spacing(int model, int grid_id, float *grid_spacing)
+    int bmi_get_grid_origin(int model, int grid_id, float *grid_origin)
 
 
 def ok_or_raise(status):
@@ -179,3 +184,13 @@ cdef class Heat:
         ok_or_raise(bmi_get_grid_type(self._bmi, grid_id, bgrid_type,
                                        BMI_MAXUNITSSTR))
         return bgrid_type.decode('utf-8').rstrip()
+
+    def get_grid_rank(self, grid_id):
+        cdef int rank
+        ok_or_raise(<int>bmi_get_grid_rank(self._bmi, grid_id, &rank))
+        return rank
+
+    def get_grid_size(self, grid_id):
+        cdef int size
+        ok_or_raise(<int>bmi_get_grid_size(self._bmi, grid_id, &size))
+        return size
