@@ -30,6 +30,10 @@ cdef extern from "c_bmiheat.h":
     int bmi_get_grid_size(int model, int grid_id, int *size)
     int bmi_get_grid_spacing(int model, int grid_id, float *spacing, int rank)
     int bmi_get_grid_origin(int model, int grid_id, float *origin, int rank)
+    int bmi_get_var_type(int model, char *var_name, int n, char *type, int m)
+    int bmi_get_var_units(int model, char *var_name, int n, char *units, int m)
+    int bmi_get_var_itemsize(int model, char *var_name, int n, int *itemsize)
+    int bmi_get_var_nbytes(int model, char *var_name, int n, int *nbytes)
 
 
 def ok_or_raise(status):
@@ -218,3 +222,37 @@ cdef class Heat:
         ok_or_raise(<int>bmi_get_grid_origin(self._bmi, grid_id,
                                              &origin[0], rank))
         return origin
+
+    def get_var_type(self, var_name):
+        n = len(var_name)
+        _var_name = bytes(var_name.encode('utf-8'))
+        var_type = ' '*BMI_MAXUNITSSTR
+        _var_type = bytes(var_type.encode('utf-8'))
+        ok_or_raise(<int>bmi_get_var_type(self._bmi, _var_name, n,
+                                          _var_type, BMI_MAXUNITSSTR))
+        return _var_type.decode('utf-8').rstrip()
+
+    def get_var_units(self, var_name):
+        n = len(var_name)
+        _var_name = bytes(var_name.encode('utf-8'))
+        var_units = ' '*BMI_MAXUNITSSTR
+        _var_units = bytes(var_units.encode('utf-8'))
+        ok_or_raise(<int>bmi_get_var_units(self._bmi, _var_name, n,
+                                           _var_units, BMI_MAXUNITSSTR))
+        return _var_units.decode('utf-8').rstrip()
+
+    def get_var_itemsize(self, var_name):
+        cdef int itemsize
+        n = len(var_name)
+        _var_name = bytes(var_name.encode('utf-8'))
+        ok_or_raise(<int>bmi_get_var_itemsize(self._bmi, _var_name, n,
+                                              &itemsize))
+        return itemsize
+
+    def get_var_nbytes(self, var_name):
+        cdef int nbytes
+        n = len(var_name)
+        _var_name = bytes(var_name.encode('utf-8'))
+        ok_or_raise(<int>bmi_get_var_nbytes(self._bmi, _var_name, n,
+                                              &nbytes))
+        return nbytes

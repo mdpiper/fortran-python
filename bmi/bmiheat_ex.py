@@ -37,16 +37,21 @@ print('Current time:', m.get_current_time())
 
 # Get the grid_id for the plate_surface__temperature variable.
 var_name = 'plate_surface__temperature'
+print('Variable {}'.format(var_name))
 grid_id = m.get_var_grid(var_name)
-print('Grid id for plate_surface__temperature:', grid_id)
+print(' - grid id:', grid_id)
 
-# Get grid info for the plate_surface__temperature variable.
-print(' - type:', m.get_grid_type(grid_id))
+# Get grid and variable info for plate_surface__temperature.
+print(' - grid type:', m.get_grid_type(grid_id))
 print(' - rank:', m.get_grid_rank(grid_id))
 print(' - shape:', m.get_grid_shape(grid_id))
 print(' - size:', m.get_grid_size(grid_id))
 print(' - spacing:', m.get_grid_spacing(grid_id))
 print(' - origin:', m.get_grid_origin(grid_id))
+print(' - variable type:', m.get_var_type(var_name))
+print(' - units:', m.get_var_units(var_name))
+print(' - itemsize:', m.get_var_itemsize(var_name))
+print(' - nbytes:', m.get_var_nbytes(var_name))
 
 # Finalize the model.
 m.finalize()
