@@ -1,7 +1,8 @@
 /* Use max string length definitions from "bmi.f90". */
-#define BMI_MAXVARNAMESTR (2048)
-#define BMI_MAXCOMPNAMESTR (2048)
-#define BMI_MAXUNITSSTR (2048)
+#define BMI_MAX_COMPONENT_NAME (2048)
+#define BMI_MAX_VAR_NAME (2048)
+#define BMI_MAX_TYPE_NAME (2048)
+#define BMI_MAX_UNITS_NAME (2048)
 
 int bmi_new(void);
 

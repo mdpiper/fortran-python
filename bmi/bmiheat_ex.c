@@ -29,8 +29,8 @@ int main(int argc, char *argv[]) {
   printf("- initialize status: %d\n", status);
 
   // Get the model's name.
-  component_name = malloc(BMI_MAXCOMPNAMESTR);
-  status = bmi_get_component_name(model, component_name, BMI_MAXCOMPNAMESTR);
+  component_name = malloc(BMI_MAX_COMPONENT_NAME);
+  status = bmi_get_component_name(model, component_name, BMI_MAX_COMPONENT_NAME);
   printf("- component name: %s\n", component_name);
   free(component_name);
 
@@ -38,9 +38,9 @@ int main(int argc, char *argv[]) {
   status = bmi_get_input_var_name_count(model, &n_invars);
   printf("- number of input vars: %d\n", n_invars);
   input_var_names = malloc(n_invars);
-  input_var_names[0] = malloc(BMI_MAXVARNAMESTR);
+  input_var_names[0] = malloc(BMI_MAX_VAR_NAME);
   for (i = 1; i < n_invars; i++) {
-    input_var_names[i] = input_var_names[i - 1] + BMI_MAXVARNAMESTR;
+    input_var_names[i] = input_var_names[i - 1] + BMI_MAX_VAR_NAME;
   }
   status = bmi_get_input_var_names(model, input_var_names);
   printf("- input var names:\n");
@@ -53,9 +53,9 @@ int main(int argc, char *argv[]) {
   status = bmi_get_output_var_name_count(model, &n_outvars);
   printf("- number of output vars: %d\n", n_outvars);
   output_var_names = malloc(n_outvars);
-  output_var_names[0] = malloc(BMI_MAXVARNAMESTR);
+  output_var_names[0] = malloc(BMI_MAX_VAR_NAME);
   for (i = 1; i < n_outvars; i++) {
-    output_var_names[i] = output_var_names[i - 1] + BMI_MAXVARNAMESTR;
+    output_var_names[i] = output_var_names[i - 1] + BMI_MAX_VAR_NAME;
   }
   status = bmi_get_output_var_names(model, output_var_names);
   printf("- output var names:\n");
@@ -73,8 +73,8 @@ int main(int argc, char *argv[]) {
   printf("- model current time: %6.1f\n", time);
   status = bmi_get_time_step(model, &time);
   printf("- model time step: %6.1f\n", time);
-  units = malloc(BMI_MAXUNITSSTR);
-  status = bmi_get_time_units(model, units, BMI_MAXUNITSSTR);
+  units = malloc(BMI_MAX_UNITS_NAME);
+  status = bmi_get_time_units(model, units, BMI_MAX_UNITS_NAME);
   printf("- model time units: %s\n", units);
   free(units);
 
@@ -103,9 +103,9 @@ int main(int argc, char *argv[]) {
   printf("- grid_id for plate_surface__temperature: %d\n", grid_id);
 
   // Get grid information for the plate_surface__temperature variable.
-  grid_type = malloc(BMI_MAXUNITSSTR);
-  memset(grid_type, 0, BMI_MAXUNITSSTR);
-  status = bmi_get_grid_type(model, grid_id, grid_type, BMI_MAXUNITSSTR);
+  grid_type = malloc(BMI_MAX_TYPE_NAME);
+  memset(grid_type, 0, BMI_MAX_TYPE_NAME);
+  status = bmi_get_grid_type(model, grid_id, grid_type, BMI_MAX_TYPE_NAME);
   printf("- grid type: %s\n", grid_type);
   free(grid_type);
   status = bmi_get_grid_rank(model, grid_id, &rank);
@@ -124,9 +124,9 @@ int main(int argc, char *argv[]) {
   var_name = "plate_surface__temperature";
   nchars = strlen(var_name);
   printf("- Info for variable %s\n", var_name);
-  var_type = malloc(BMI_MAXUNITSSTR);
-  memset(var_type, 0, BMI_MAXUNITSSTR);
-  status = bmi_get_var_type(model, var_name, nchars, var_type, BMI_MAXUNITSSTR);
+  var_type = malloc(BMI_MAX_TYPE_NAME);
+  memset(var_type, 0, BMI_MAX_TYPE_NAME);
+  status = bmi_get_var_type(model, var_name, nchars, var_type, BMI_MAX_TYPE_NAME);
   printf(" - variable type: %s\n", var_type);
   free(var_type);
   status = bmi_get_var_nbytes(model, var_name, nchars, &nbytes);

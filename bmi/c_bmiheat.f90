@@ -108,7 +108,7 @@ contains
     integer (c_int), intent(in), value :: model_index
     type (c_ptr), dimension(input_item_count),  intent(out) :: names
     integer (c_int) :: status, i
-    character (len=BMI_MAXVARNAMESTR), dimension(:), pointer :: pnames
+    character (len=BMI_MAX_VAR_NAME), dimension(:), pointer :: pnames
 
     status = model_array(model_index)%get_input_var_names(pnames)
 
@@ -139,7 +139,7 @@ contains
     integer (c_int), intent(in), value :: model_index
     type (c_ptr), dimension(output_item_count),  intent(out) :: names
     integer (c_int) :: status, i
-    character (len=BMI_MAXVARNAMESTR), dimension(:), pointer :: pnames
+    character (len=BMI_MAX_VAR_NAME), dimension(:), pointer :: pnames
 
     status = model_array(model_index)%get_output_var_names(pnames)
 

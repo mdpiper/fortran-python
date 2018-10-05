@@ -4,9 +4,10 @@ cimport numpy as np
 
 
 cdef extern from "c_bmiheat.h":
-    int BMI_MAXCOMPNAMESTR
-    int BMI_MAXVARNAMESTR
-    int BMI_MAXUNITSSTR
+    int BMI_MAX_COMPONENT_NAME
+    int BMI_MAX_VAR_NAME
+    int BMI_MAX_TYPE_NAME
+    int BMI_MAX_UNITS_NAME
     int bmi_new()
     int bmi_initialize(int model, char *config_file, int n)
     int bmi_finalize(int model)
@@ -63,10 +64,10 @@ cdef class Heat:
         ok_or_raise(status)
 
     def get_component_name(self):
-        name = ' '*BMI_MAXCOMPNAMESTR
+        name = ' '*BMI_MAX_COMPONENT_NAME
         bname = bytes(name.encode('utf-8'))
         ok_or_raise(bmi_get_component_name(self._bmi, bname,
-                                           BMI_MAXCOMPNAMESTR))
+                                           BMI_MAX_COMPONENT_NAME))
         return bname.decode('utf-8').rstrip()
 
     cpdef int get_input_var_name_count(self):
@@ -85,9 +86,9 @@ cdef class Heat:
 
         try:
             names = <char**>malloc(count * sizeof(char*))
-            names[0] = <char*>malloc(count * BMI_MAXVARNAMESTR * sizeof(char))
+            names[0] = <char*>malloc(count * BMI_MAX_VAR_NAME * sizeof(char))
             for i in range(1, count):
-                names[i] = names[i - 1] + BMI_MAXVARNAMESTR
+                names[i] = names[i - 1] + BMI_MAX_VAR_NAME
 
             ok_or_raise(<int>bmi_get_input_var_names(self._bmi, names))
 
@@ -118,9 +119,9 @@ cdef class Heat:
 
         try:
             names = <char**>malloc(count * sizeof(char*))
-            names[0] = <char*>malloc(count * BMI_MAXVARNAMESTR * sizeof(char))
+            names[0] = <char*>malloc(count * BMI_MAX_VAR_NAME * sizeof(char))
             for i in range(1, count):
-                names[i] = names[i - 1] + BMI_MAXVARNAMESTR
+                names[i] = names[i - 1] + BMI_MAX_VAR_NAME
 
             ok_or_raise(<int>bmi_get_output_var_names(self._bmi, names))
 
@@ -156,10 +157,10 @@ cdef class Heat:
         return step
 
     def get_time_units(self):
-        units = ' '*BMI_MAXUNITSSTR
+        units = ' '*BMI_MAX_UNITS_NAME
         bunits = bytes(units.encode('utf-8'))
         ok_or_raise(bmi_get_time_units(self._bmi, bunits,
-                                       BMI_MAXUNITSSTR))
+                                       BMI_MAX_UNITS_NAME))
         return bunits.decode('utf-8').rstrip()
 
     def update(self):
@@ -183,10 +184,10 @@ cdef class Heat:
         return grid_id
 
     def get_grid_type(self, grid_id):
-        grid_type = ' '*BMI_MAXUNITSSTR
+        grid_type = ' '*BMI_MAX_TYPE_NAME
         bgrid_type = bytes(grid_type.encode('utf-8'))
         ok_or_raise(bmi_get_grid_type(self._bmi, grid_id, bgrid_type,
-                                       BMI_MAXUNITSSTR))
+                                       BMI_MAX_TYPE_NAME))
         return bgrid_type.decode('utf-8').rstrip()
 
     def get_grid_rank(self, grid_id):
@@ -226,19 +227,19 @@ cdef class Heat:
     def get_var_type(self, var_name):
         n = len(var_name)
         _var_name = bytes(var_name.encode('utf-8'))
-        var_type = ' '*BMI_MAXUNITSSTR
+        var_type = ' '*BMI_MAX_TYPE_NAME
         _var_type = bytes(var_type.encode('utf-8'))
         ok_or_raise(<int>bmi_get_var_type(self._bmi, _var_name, n,
-                                          _var_type, BMI_MAXUNITSSTR))
+                                          _var_type, BMI_MAX_TYPE_NAME))
         return _var_type.decode('utf-8').rstrip()
 
     def get_var_units(self, var_name):
         n = len(var_name)
         _var_name = bytes(var_name.encode('utf-8'))
-        var_units = ' '*BMI_MAXUNITSSTR
+        var_units = ' '*BMI_MAX_UNITS_NAME
         _var_units = bytes(var_units.encode('utf-8'))
         ok_or_raise(<int>bmi_get_var_units(self._bmi, _var_name, n,
-                                           _var_units, BMI_MAXUNITSSTR))
+                                           _var_units, BMI_MAX_UNITS_NAME))
         return _var_units.decode('utf-8').rstrip()
 
     def get_var_itemsize(self, var_name):
