@@ -365,4 +365,104 @@ contains
     status = model_array(model_index)%get_grid_origin(grid_id, grid_origin)
   end function bmi_get_grid_origin
 
+  !
+  ! Get the type for the specified variable.
+  !
+  function bmi_get_var_type(model_index, var_name, n, var_type, m) &
+       bind(c) result(status)
+    integer (c_int), intent(in), value :: model_index
+    integer (c_int), intent(in), value :: n
+    character (len=1, kind=c_char), intent(in) :: var_name(n)
+    integer (c_int), intent(in), value :: m
+    character (len=1, kind=c_char), intent(out) :: var_type(m)
+
+    integer (c_int) :: i, status
+    character (len=n, kind=c_char) :: var_name_
+    character (len=m, kind=c_char) :: var_type_
+
+    do i = 1, n
+       var_name_(i:i) = var_name(i)
+    enddo
+    do i = 1, m
+       var_type_(i:i) = var_type(i)
+    enddo
+
+    status = model_array(model_index)%get_var_type(var_name_, var_type_)
+
+    do i = 1, len(trim(var_type_))
+        var_type(i) = var_type_(i:i)
+    enddo
+    var_type = var_type//C_NULL_CHAR
+  end function bmi_get_var_type
+
+  !
+  ! Get the units for the specified variable.
+  !
+  function bmi_get_var_units(model_index, var_name, n, var_units, m) &
+       bind(c) result(status)
+    integer (c_int), intent(in), value :: model_index
+    integer (c_int), intent(in), value :: n
+    character (len=1, kind=c_char), intent(in) :: var_name(n)
+    integer (c_int), intent(in), value :: m
+    character (len=1, kind=c_char), intent(out) :: var_units(m)
+
+    integer (c_int) :: i, status
+    character (len=n, kind=c_char) :: var_name_
+    character (len=m, kind=c_char) :: var_units_
+
+    do i = 1, n
+       var_name_(i:i) = var_name(i)
+    enddo
+    do i = 1, m
+       var_units_(i:i) = var_units(i)
+    enddo
+
+    status = model_array(model_index)%get_var_units(var_name_, var_units_)
+
+    do i = 1, len(trim(var_units_))
+        var_units(i) = var_units_(i:i)
+    enddo
+    var_units = var_units//C_NULL_CHAR
+  end function bmi_get_var_units
+
+  !
+  ! Get the size of a single element of the specified variable.
+  !
+  function bmi_get_var_itemsize(model_index, var_name, n, var_itemsize) &
+       bind(c) result(status)
+    integer (c_int), intent(in), value :: model_index
+    integer (c_int), intent(in), value :: n
+    character (len=1, kind=c_char), intent(in) :: var_name(n)
+    integer (c_int), intent(out) :: var_itemsize
+
+    integer (c_int) :: i, status
+    character (len=n, kind=c_char) :: var_name_
+
+    do i = 1, n
+       var_name_(i:i) = var_name(i)
+    enddo
+
+    status = model_array(model_index)%get_var_itemsize(var_name_, var_itemsize)
+  end function bmi_get_var_itemsize
+
+  !
+  ! Get the total number of bytes used by the specified variable.
+  !
+  function bmi_get_var_nbytes(model_index, var_name, n, var_nbytes) &
+       bind(c) result(status)
+    integer (c_int), intent(in), value :: model_index
+    integer (c_int), intent(in), value :: n
+    character (len=1, kind=c_char), intent(in) :: var_name(n)
+    integer (c_int), intent(out) :: var_nbytes
+
+    integer (c_int) :: i, status
+    character (len=n, kind=c_char) :: var_name_
+
+    do i = 1, n
+       var_name_(i:i) = var_name(i)
+    enddo
+
+    status = model_array(model_index)%get_var_nbytes(var_name_, var_nbytes)
+  end function bmi_get_var_nbytes
+
 end module c_bmiheat

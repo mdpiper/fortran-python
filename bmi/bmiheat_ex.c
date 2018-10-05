@@ -17,6 +17,8 @@ int main(int argc, char *argv[]) {
   char *grid_type;
   int rank;
   int *shape;
+  char *var_type;
+  int nbytes;
 
   // Get a new model.
   model = bmi_new();
@@ -117,6 +119,18 @@ int main(int argc, char *argv[]) {
   }
   printf("\n");
   free(shape);
+
+  // Get information for the plate_surface__temperature variable.
+  var_name = "plate_surface__temperature";
+  nchars = strlen(var_name);
+  printf("- Info for variable %s\n", var_name);
+  var_type = malloc(BMI_MAXUNITSSTR);
+  memset(var_type, 0, BMI_MAXUNITSSTR);
+  status = bmi_get_var_type(model, var_name, nchars, var_type, BMI_MAXUNITSSTR);
+  printf(" - variable type: %s\n", var_type);
+  free(var_type);
+  status = bmi_get_var_nbytes(model, var_name, nchars, &nbytes);
+  printf(" - total memory (bytes): %d\n", nbytes);
 
   // Finalize the model.
   status = bmi_finalize(model);
