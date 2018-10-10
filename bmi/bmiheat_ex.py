@@ -53,6 +53,26 @@ print(' - units:', m.get_var_units(var_name))
 print(' - itemsize:', m.get_var_itemsize(var_name))
 print(' - nbytes:', m.get_var_nbytes(var_name))
 
+# Get the grid_id for the plate_surface__thermal_diffusivity variable.
+var_name = 'plate_surface__thermal_diffusivity'
+print('Variable {}'.format(var_name))
+grid_id = m.get_var_grid(var_name)
+print(' - grid id:', grid_id)
+
+# Get grid and variable info for plate_surface__thermal_diffusivity.
+print(' - grid type:', m.get_grid_type(grid_id))
+print(' - rank:', m.get_grid_rank(grid_id))
+print(' - size:', m.get_grid_size(grid_id))
+print(' - x:', m.get_grid_x(grid_id))
+print(' - y:', m.get_grid_y(grid_id))
+print(' - z:', m.get_grid_z(grid_id))
+print(' - connectivity:', m.get_grid_connectivity(grid_id))
+print(' - offset:', m.get_grid_offset(grid_id))
+print(' - variable type:', m.get_var_type(var_name))
+print(' - units:', m.get_var_units(var_name))
+print(' - itemsize:', m.get_var_itemsize(var_name))
+print(' - nbytes:', m.get_var_nbytes(var_name))
+
 # Finalize the model.
 m.finalize()
 

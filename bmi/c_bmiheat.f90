@@ -373,6 +373,76 @@ contains
   end function bmi_get_grid_origin
 
   !
+  ! Get the x-coordinates of a grid's nodes.
+  !
+  function bmi_get_grid_x(model_index, grid_id, grid_x, n) &
+       bind(c) result(status)
+    integer (c_int), intent(in), value :: model_index
+    integer (c_int), intent(in), value :: grid_id
+    integer (c_int), intent(in), value :: n
+    real (c_float), intent(out) :: grid_x(n)
+    integer (c_int) :: status
+
+    status = model_array(model_index)%get_grid_x(grid_id, grid_x)
+  end function bmi_get_grid_x
+
+  !
+  ! Get the y-coordinates of a grid's nodes.
+  !
+  function bmi_get_grid_y(model_index, grid_id, grid_y, n) &
+       bind(c) result(status)
+    integer (c_int), intent(in), value :: model_index
+    integer (c_int), intent(in), value :: grid_id
+    integer (c_int), intent(in), value :: n
+    real (c_float), intent(out) :: grid_y(n)
+    integer (c_int) :: status
+
+    status = model_array(model_index)%get_grid_y(grid_id, grid_y)
+  end function bmi_get_grid_y
+
+  !
+  ! Get the z-coordinates of a grid's nodes.
+  !
+  function bmi_get_grid_z(model_index, grid_id, grid_z, n) &
+       bind(c) result(status)
+    integer (c_int), intent(in), value :: model_index
+    integer (c_int), intent(in), value :: grid_id
+    integer (c_int), intent(in), value :: n
+    real (c_float), intent(out) :: grid_z(n)
+    integer (c_int) :: status
+
+    status = model_array(model_index)%get_grid_z(grid_id, grid_z)
+  end function bmi_get_grid_z
+
+  !
+  ! Get the connectivity of a grid's nodes.
+  !
+  function bmi_get_grid_connectivity(model_index, grid_id, grid_conn, n) &
+       bind(c) result(status)
+    integer (c_int), intent(in), value :: model_index
+    integer (c_int), intent(in), value :: grid_id
+    integer (c_int), intent(in), value :: n
+    integer (c_int), intent(out) :: grid_conn(n)
+    integer (c_int) :: status
+
+    status = model_array(model_index)%get_grid_connectivity(grid_id, grid_conn)
+  end function bmi_get_grid_connectivity
+
+  !
+  ! Get the offset of a grid's nodes.
+  !
+  function bmi_get_grid_offset(model_index, grid_id, grid_offset, n) &
+       bind(c) result(status)
+    integer (c_int), intent(in), value :: model_index
+    integer (c_int), intent(in), value :: grid_id
+    integer (c_int), intent(in), value :: n
+    integer (c_int), intent(out) :: grid_offset(n)
+    integer (c_int) :: status
+
+    status = model_array(model_index)%get_grid_offset(grid_id, grid_offset)
+  end function bmi_get_grid_offset
+
+  !
   ! Get the type for the specified variable.
   !
   function bmi_get_var_type(model_index, var_name, n, var_type, m) &

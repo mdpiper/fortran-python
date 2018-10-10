@@ -31,6 +31,11 @@ cdef extern from "c_bmiheat.h":
     int bmi_get_grid_size(int model, int grid_id, int *size)
     int bmi_get_grid_spacing(int model, int grid_id, float *spacing, int rank)
     int bmi_get_grid_origin(int model, int grid_id, float *origin, int rank)
+    int bmi_get_grid_x(int model, int grid_id, float *x, int size)
+    int bmi_get_grid_y(int model, int grid_id, float *y, int size)
+    int bmi_get_grid_z(int model, int grid_id, float *z, int size)
+    int bmi_get_grid_connectivity(int model, int grid_id, int *conn, int size)
+    int bmi_get_grid_offset(int model, int grid_id, int *offset, int size)
     int bmi_get_var_type(int model, char *var_name, int n, char *type, int m)
     int bmi_get_var_units(int model, char *var_name, int n, char *units, int m)
     int bmi_get_var_itemsize(int model, char *var_name, int n, int *itemsize)
@@ -223,6 +228,46 @@ cdef class Heat:
         ok_or_raise(<int>bmi_get_grid_origin(self._bmi, grid_id,
                                              &origin[0], rank))
         return origin
+
+    def get_grid_x(self, grid_id):
+        cdef int size = self.get_grid_size(grid_id)
+        cdef np.ndarray[float, ndim=1, mode="c"] \
+            grid_x = np.empty(size, dtype=np.float32)
+        ok_or_raise(<int>bmi_get_grid_x(self._bmi, grid_id,
+                                        &grid_x[0], size))
+        return grid_x
+
+    def get_grid_y(self, grid_id):
+        cdef int size = self.get_grid_size(grid_id)
+        cdef np.ndarray[float, ndim=1, mode="c"] \
+            grid_y = np.empty(size, dtype=np.float32)
+        ok_or_raise(<int>bmi_get_grid_y(self._bmi, grid_id,
+                                        &grid_y[0], size))
+        return grid_y
+
+    def get_grid_z(self, grid_id):
+        cdef int size = self.get_grid_size(grid_id)
+        cdef np.ndarray[float, ndim=1, mode="c"] \
+            grid_z = np.empty(size, dtype=np.float32)
+        ok_or_raise(<int>bmi_get_grid_z(self._bmi, grid_id,
+                                        &grid_z[0], size))
+        return grid_z
+
+    def get_grid_connectivity(self, grid_id):
+        cdef int size = self.get_grid_size(grid_id)
+        cdef np.ndarray[int, ndim=1, mode="c"] \
+            conn = np.empty(size, dtype=np.intc)
+        ok_or_raise(<int>bmi_get_grid_connectivity(self._bmi, grid_id,
+                                                   &conn[0], size))
+        return conn
+
+    def get_grid_offset(self, grid_id):
+        cdef int size = self.get_grid_size(grid_id)
+        cdef np.ndarray[int, ndim=1, mode="c"] \
+            offset = np.empty(size, dtype=np.intc)
+        ok_or_raise(<int>bmi_get_grid_offset(self._bmi, grid_id,
+                                             &offset[0], size))
+        return offset
 
     def get_var_type(self, var_name):
         n = len(var_name)
