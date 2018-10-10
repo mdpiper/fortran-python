@@ -13,9 +13,9 @@ cdef extern from "c_bmiheat.h":
     int bmi_finalize(int model)
     int bmi_get_component_name(int model, char *name, int n)
     int bmi_get_input_var_name_count(int model, int *n)
-    int bmi_get_input_var_names(int model, char **names)
+    int bmi_get_input_var_names(int model, char **names, int n)
     int bmi_get_output_var_name_count(int model, int *n)
-    int bmi_get_output_var_names(int model, char **names)
+    int bmi_get_output_var_names(int model, char **names, int n)
     int bmi_get_start_time(int model, float *time)
     int bmi_get_end_time(int model, float *time)
     int bmi_get_current_time(int model, float *time)
@@ -90,7 +90,7 @@ cdef class Heat:
             for i in range(1, count):
                 names[i] = names[i - 1] + BMI_MAX_VAR_NAME
 
-            ok_or_raise(<int>bmi_get_input_var_names(self._bmi, names))
+            ok_or_raise(<int>bmi_get_input_var_names(self._bmi, names, count))
 
             for i in range(count):
                 py_names.append(names[i].decode('utf-8'))
@@ -123,7 +123,7 @@ cdef class Heat:
             for i in range(1, count):
                 names[i] = names[i - 1] + BMI_MAX_VAR_NAME
 
-            ok_or_raise(<int>bmi_get_output_var_names(self._bmi, names))
+            ok_or_raise(<int>bmi_get_output_var_names(self._bmi, names, count))
 
             for i in range(count):
                 py_names.append(names[i].decode('utf-8'))

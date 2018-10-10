@@ -1,6 +1,7 @@
 module c_bmiheat
 
   use, intrinsic :: iso_c_binding
+  use bmif, only: BMI_SUCCESS, BMI_MAX_VAR_NAME
   use bmiheatf
 
   implicit none
@@ -95,24 +96,27 @@ contains
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(out) :: count
     integer (c_int) :: status
+    character (len=BMI_MAX_VAR_NAME), pointer :: pnames(:)
 
-    count = input_item_count  ! defined in bmi_heat.f90
+    status = model_array(model_index)%get_input_var_names(pnames)
+    count = size(pnames)
     status = BMI_SUCCESS
   end function bmi_get_input_var_name_count
 
   !
   ! Get the names of the input variables.
   !
-  function bmi_get_input_var_names(model_index, names) &
+  function bmi_get_input_var_names(model_index, names, n) &
        bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
-    type (c_ptr), dimension(input_item_count),  intent(out) :: names
+    integer (c_int), intent(in), value :: n
+    type (c_ptr),  intent(out) :: names(n)
     integer (c_int) :: status, i
     character (len=BMI_MAX_VAR_NAME), dimension(:), pointer :: pnames
 
     status = model_array(model_index)%get_input_var_names(pnames)
 
-    do i = 1, input_item_count
+    do i = 1, n
        pnames(i) = trim(pnames(i))//C_NULL_CHAR
        names(i) = c_loc(pnames(i))
     enddo
@@ -126,24 +130,27 @@ contains
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(out) :: count
     integer (c_int) :: status
+    character (len=BMI_MAX_VAR_NAME), pointer :: pnames(:)
 
-    count = output_item_count  ! defined in bmi_heat.f90
+    status = model_array(model_index)%get_output_var_names(pnames)
+    count = size(pnames)
     status = BMI_SUCCESS
   end function bmi_get_output_var_name_count
 
   !
   ! Get the names of the output variables.
   !
-  function bmi_get_output_var_names(model_index, names) &
+  function bmi_get_output_var_names(model_index, names, n) &
        bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
-    type (c_ptr), dimension(output_item_count),  intent(out) :: names
+    integer (c_int), intent(in), value :: n
+    type (c_ptr),  intent(out) :: names(n)
     integer (c_int) :: status, i
     character (len=BMI_MAX_VAR_NAME), dimension(:), pointer :: pnames
 
     status = model_array(model_index)%get_output_var_names(pnames)
 
-    do i = 1, output_item_count
+    do i = 1, n
        pnames(i) = trim(pnames(i))//C_NULL_CHAR
        names(i) = c_loc(pnames(i))
     enddo

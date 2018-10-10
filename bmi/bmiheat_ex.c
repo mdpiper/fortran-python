@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
   for (i = 1; i < n_invars; i++) {
     input_var_names[i] = input_var_names[i - 1] + BMI_MAX_VAR_NAME;
   }
-  status = bmi_get_input_var_names(model, input_var_names);
+  status = bmi_get_input_var_names(model, input_var_names, n_invars);
   printf("- input var names:\n");
   for (i = 0; i < n_invars; i++) {
     printf("  - %s\n", input_var_names[i]);
@@ -57,7 +57,7 @@ int main(int argc, char *argv[]) {
   for (i = 1; i < n_outvars; i++) {
     output_var_names[i] = output_var_names[i - 1] + BMI_MAX_VAR_NAME;
   }
-  status = bmi_get_output_var_names(model, output_var_names);
+  status = bmi_get_output_var_names(model, output_var_names, n_outvars);
   printf("- output var names:\n");
   for (i = 0; i < n_outvars; i++) {
     printf("  - %s\n", output_var_names[i]);
