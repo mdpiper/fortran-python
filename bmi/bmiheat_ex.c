@@ -6,7 +6,7 @@
 
 int main(int argc, char *argv[]) {
   int model, status, n_invars, n_outvars, i;
-  char *config_file = "";
+  char *config_file = "test.cfg";
   int nchars = strlen(config_file);
   char *component_name;
   char **input_var_names, **output_var_names;
@@ -15,10 +15,11 @@ int main(int argc, char *argv[]) {
   char *var_name;
   int grid_id;
   char *grid_type;
-  int rank;
-  int *shape;
+  int grid_rank;
+  int *grid_shape;
+  int grid_size;
   char *var_type;
-  int nbytes;
+  int var_nbytes;
 
   // Get a new model.
   model = bmi_new();
@@ -96,41 +97,42 @@ int main(int argc, char *argv[]) {
   status = bmi_get_current_time(model, &time);
   printf("- model current time: %6.1f\n", time);
 
-  // Get the grid_id for one of the input variables.
+  // Get grid information for the plate_surface__temperature variable.
   var_name = "plate_surface__temperature";
   nchars = strlen(var_name);
   status = bmi_get_var_grid(model, var_name, nchars, &grid_id);
-  printf("- grid_id for plate_surface__temperature: %d\n", grid_id);
-
-  // Get grid information for the plate_surface__temperature variable.
+  printf("- Grid info for %s\n", var_name);
+  printf(" - grid_id: %d\n", grid_id);
   grid_type = malloc(BMI_MAX_TYPE_NAME);
   memset(grid_type, 0, BMI_MAX_TYPE_NAME);
   status = bmi_get_grid_type(model, grid_id, grid_type, BMI_MAX_TYPE_NAME);
-  printf("- grid type: %s\n", grid_type);
+  printf(" - grid type: %s\n", grid_type);
   free(grid_type);
-  status = bmi_get_grid_rank(model, grid_id, &rank);
-  printf("- grid rank: %d\n", rank);
-  shape = malloc(rank * sizeof(int));
-  /* status = bmi_get_grid_shape(model, grid_id, &shape[0]); */
-  status = bmi_get_grid_shape(model, grid_id, shape, rank);
-  printf("- grid shape:");
-  for (i = 0; i < rank; i++) {
-    printf(" %d", shape[i]);
+  status = bmi_get_grid_rank(model, grid_id, &grid_rank);
+  printf(" - grid rank: %d\n", grid_rank);
+  grid_shape = malloc(grid_rank * sizeof(int));
+  /* status = bmi_get_grid_shape(model, grid_id, &grid_shape[0]); */
+  status = bmi_get_grid_shape(model, grid_id, grid_shape, grid_rank);
+  printf(" - grid shape:");
+  for (i = 0; i < grid_rank; i++) {
+    printf(" %d", grid_shape[i]);
   }
   printf("\n");
-  free(shape);
+  free(grid_shape);
+  status = bmi_get_grid_size(model, grid_id, &grid_size);
+  printf(" - grid size: %d\n", grid_size);
 
   // Get information for the plate_surface__temperature variable.
   var_name = "plate_surface__temperature";
   nchars = strlen(var_name);
-  printf("- Info for variable %s\n", var_name);
+  printf("- Variable info for %s\n", var_name);
   var_type = malloc(BMI_MAX_TYPE_NAME);
   memset(var_type, 0, BMI_MAX_TYPE_NAME);
   status = bmi_get_var_type(model, var_name, nchars, var_type, BMI_MAX_TYPE_NAME);
   printf(" - variable type: %s\n", var_type);
   free(var_type);
-  status = bmi_get_var_nbytes(model, var_name, nchars, &nbytes);
-  printf(" - total memory (bytes): %d\n", nbytes);
+  status = bmi_get_var_nbytes(model, var_name, nchars, &var_nbytes);
+  printf(" - total memory (bytes): %d\n", var_nbytes);
 
   // Finalize the model.
   status = bmi_finalize(model);
