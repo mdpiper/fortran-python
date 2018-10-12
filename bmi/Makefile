@@ -9,11 +9,13 @@ name = bmiheat
 py_${name}:
 	${FC} ${CFLAGS} ${FFLAGS} c_${name}.f90
 	python setup.py build_ext --inplace
+	@date
 
 c_${name}:
 	${FC} ${CFLAGS} ${FFLAGS} c_${name}.f90
 	${CC} ${CFLAGS} ${name}_ex.c
 	${CC} ${LDFLAGS} *.o -l${FC} -o $@
+	@date
 
 clean:
 	rm -rf *~ *.o *.so *.mod c_${name} ${name}.c build/
