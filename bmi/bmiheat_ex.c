@@ -5,7 +5,7 @@
 
 
 int main(int argc, char *argv[]) {
-  int model, status, n_invars, n_outvars, i;
+  int model, status, n_invars, n_outvars, i, j, k;
   char *config_file = "test.cfg";
   int nchars = strlen(config_file);
   char *component_name;
@@ -20,6 +20,7 @@ int main(int argc, char *argv[]) {
   int grid_size;
   char *var_type;
   int var_nbytes;
+  void *buffer;
 
   // Get a new model.
   model = bmi_new();
@@ -118,7 +119,6 @@ int main(int argc, char *argv[]) {
     printf(" %d", grid_shape[i]);
   }
   printf("\n");
-  free(grid_shape);
   status = bmi_get_grid_size(model, grid_id, &grid_size);
   printf(" - grid size: %d\n", grid_size);
 
@@ -133,6 +133,26 @@ int main(int argc, char *argv[]) {
   free(var_type);
   status = bmi_get_var_nbytes(model, var_name, nchars, &var_nbytes);
   printf(" - total memory (bytes): %d\n", var_nbytes);
+
+  // Get the values. (Note: not completely confident gridded order is correct.)
+  buffer = malloc(grid_size * sizeof(float));
+  status = bmi_get_value_float(model, var_name, nchars, buffer, grid_size);
+  printf(" - values, streamwise:\n");
+  for (i = 0; i < grid_size; i++) {
+    printf(" %6.1f", ((float *)buffer)[i]);
+  }
+  printf(" - values, dimensional:\n");
+  for (j = 0; j < grid_shape[1]; j++) {
+    for (i = 0; i < grid_shape[0]; i++) {
+      k = i + j*grid_shape[0];
+      printf(" %6.1f", ((float *)buffer)[k]);
+    }
+    printf("\n");
+  }
+  free(buffer);
+
+  // Clean up variables.
+  free(grid_shape);
 
   // Finalize the model.
   status = bmi_finalize(model);
