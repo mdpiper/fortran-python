@@ -40,6 +40,9 @@ cdef extern from "c_bmiheat.h":
     int bmi_get_var_units(int model, char *var_name, int n, char *units, int m)
     int bmi_get_var_itemsize(int model, char *var_name, int n, int *itemsize)
     int bmi_get_var_nbytes(int model, char *var_name, int n, int *nbytes)
+    int bmi_get_value_int(int model, char *var_name, int n, void *buffer, int size)
+    int bmi_get_value_float(int model, char *var_name, int n, void *buffer, int size)
+    int bmi_get_value_double(int model, char *var_name, int n, void *buffer, int size)
 
 
 def ok_or_raise(status):
@@ -302,3 +305,43 @@ cdef class Heat:
         ok_or_raise(<int>bmi_get_var_nbytes(self._bmi, _var_name, n,
                                               &nbytes))
         return nbytes
+
+    def get_value_int(self, var_name, grid_size):
+        cdef np.ndarray[int, ndim=1, mode="c"] \
+            buffer = np.empty(grid_size, dtype=np.intc)
+        ok_or_raise(<int>bmi_get_value_float(self._bmi, var_name,
+                                             len(var_name),
+                                             buffer.data, grid_size))
+
+    def get_value_float(self, var_name, grid_size):
+        cdef np.ndarray[float, ndim=1, mode="c"] \
+            buffer = np.empty(grid_size, dtype=np.float32)
+        ok_or_raise(<int>bmi_get_value_float(self._bmi, var_name,
+                                             len(var_name),
+                                             buffer.data, grid_size))
+        return buffer
+
+    def get_value_double(self, var_name, grid_size):
+        cdef np.ndarray[double, ndim=1, mode="c"] \
+            buffer = np.empty(grid_size, dtype=np.float64)
+        ok_or_raise(<int>bmi_get_value_float(self._bmi, var_name,
+                                             len(var_name),
+                                             buffer.data, grid_size))
+        return buffer
+
+    def get_value(self, var_name):
+        cdef int grid_id = self.get_var_grid(var_name)
+        cdef int grid_size = self.get_grid_size(grid_id)
+        type = self.get_var_type(var_name)
+
+        _var_name = bytes(var_name.encode('utf-8'))
+
+        if type.startswith('double'):
+            buffer = self.get_value_double(_var_name, grid_size)
+        elif type.startswith('int'):
+            buffer = self.get_value_int(_var_name, grid_size)
+        else:
+            buffer = self.get_value_float(_var_name, grid_size)
+
+        return buffer
+
