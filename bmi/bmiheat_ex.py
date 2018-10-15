@@ -98,6 +98,39 @@ print(' - values:')
 val = m.get_value(var_name)
 print(val)
 
+# Get the grid_id for the model__identification_number variable.
+var_name = 'model__identification_number'
+print('Variable {}'.format(var_name))
+grid_id = m.get_var_grid(var_name)
+print(' - grid id:', grid_id)
+
+# Get grid and variable info for model__identification_number.
+print(' - grid type:', m.get_grid_type(grid_id))
+print(' - rank:', m.get_grid_rank(grid_id))
+print(' - size:', m.get_grid_size(grid_id))
+print(' - x:', m.get_grid_x(grid_id))
+print(' - y:', m.get_grid_y(grid_id))
+print(' - z:', m.get_grid_z(grid_id))
+print(' - connectivity:', m.get_grid_connectivity(grid_id))
+print(' - offset:', m.get_grid_offset(grid_id))
+print(' - variable type:', m.get_var_type(var_name))
+print(' - units:', m.get_var_units(var_name))
+print(' - itemsize:', m.get_var_itemsize(var_name))
+print(' - nbytes:', m.get_var_nbytes(var_name))
+
+# Get the model id.
+print(' - values:')
+val = m.get_value(var_name)
+print(val)
+
+# Set new model id.
+# new = np.arange(grid_size, dtype=np.float32)  # 'real*4 in Fortran
+new = np.array(42, dtype=np.intc)
+m.set_value(var_name, new)
+check = m.get_value(var_name)
+print(' - new values (set/get):');
+print(check)
+
 # Finalize the model.
 m.finalize()
 
