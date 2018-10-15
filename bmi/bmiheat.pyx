@@ -318,9 +318,9 @@ cdef class Heat:
     def get_value_int(self, var_name, grid_size):
         cdef np.ndarray[int, ndim=1, mode="c"] \
             buffer = np.empty(grid_size, dtype=np.intc)
-        ok_or_raise(<int>bmi_get_value_float(self._bmi, var_name,
-                                             len(var_name),
-                                             buffer.data, grid_size))
+        ok_or_raise(<int>bmi_get_value_int(self._bmi, var_name,
+                                           len(var_name),
+                                           buffer.data, grid_size))
 
     def get_value_float(self, var_name, grid_size):
         cdef np.ndarray[float, ndim=1, mode="c"] \
@@ -333,9 +333,9 @@ cdef class Heat:
     def get_value_double(self, var_name, grid_size):
         cdef np.ndarray[double, ndim=1, mode="c"] \
             buffer = np.empty(grid_size, dtype=np.float64)
-        ok_or_raise(<int>bmi_get_value_float(self._bmi, var_name,
-                                             len(var_name),
-                                             buffer.data, grid_size))
+        ok_or_raise(<int>bmi_get_value_double(self._bmi, var_name,
+                                              len(var_name),
+                                              buffer.data, grid_size))
         return buffer
 
     def get_value(self, var_name):
