@@ -321,6 +321,7 @@ cdef class Heat:
         ok_or_raise(<int>bmi_get_value_int(self._bmi, var_name,
                                            len(var_name),
                                            buffer.data, grid_size))
+        return buffer
 
     def get_value_float(self, var_name, grid_size):
         cdef np.ndarray[float, ndim=1, mode="c"] \
