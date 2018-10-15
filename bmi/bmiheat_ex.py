@@ -50,7 +50,8 @@ print(' - grid type:', m.get_grid_type(grid_id))
 print(' - rank:', m.get_grid_rank(grid_id))
 grid_shape = m.get_grid_shape(grid_id)
 print(' - shape:', grid_shape)
-print(' - size:', m.get_grid_size(grid_id))
+grid_size = m.get_grid_size(grid_id)
+print(' - size:', grid_size)
 print(' - spacing:', m.get_grid_spacing(grid_id))
 print(' - origin:', m.get_grid_origin(grid_id))
 print(' - variable type:', m.get_var_type(var_name))
@@ -58,9 +59,19 @@ print(' - units:', m.get_var_units(var_name))
 print(' - itemsize:', m.get_var_itemsize(var_name))
 print(' - nbytes:', m.get_var_nbytes(var_name))
 
-print(' - values (gridded):')
+# Get the temperature values.
 val = m.get_value(var_name)
+print(' - values (streamwise):')
+print(val)
+print(' - values (gridded):')
 print(val.reshape(np.roll(grid_shape, 1)))
+
+# Set new temperature values.
+new = np.arange(grid_size, dtype=np.float32)  # 'real*4 in Fortran
+m.set_value(var_name, new)
+check = m.get_value(var_name)
+print(' - new values (set/get, streamwise):');
+print(check)
 
 # Get the grid_id for the plate_surface__thermal_diffusivity variable.
 var_name = 'plate_surface__thermal_diffusivity'
@@ -82,6 +93,7 @@ print(' - units:', m.get_var_units(var_name))
 print(' - itemsize:', m.get_var_itemsize(var_name))
 print(' - nbytes:', m.get_var_nbytes(var_name))
 
+# Get the diffusivity values.
 print(' - values:')
 val = m.get_value(var_name)
 print(val)
