@@ -1,7 +1,7 @@
 module c_bmiheat
 
   use, intrinsic :: iso_c_binding
-  use bmif, only: BMI_SUCCESS, BMI_MAX_VAR_NAME
+  use bmif, only: BMI_SUCCESS, BMI_FAILURE, BMI_MAX_VAR_NAME, BMI_MAX_TYPE_NAME
   use bmiheatf
 
   implicit none
@@ -610,6 +610,47 @@ contains
 
     status = model_array(model_index)%get_value(var_name_, buffer)
   end function bmi_get_value_double
+
+  !
+  ! Get a reference to a variable's values.
+  !
+  function bmi_get_value_ref(model_index, var_name, n, ref) &
+       bind(c) result(status)
+    integer (c_int), intent(in), value :: model_index
+    integer (c_int), intent(in), value :: n
+    character (len=1, kind=c_char), intent(in) :: var_name(n)
+    type (c_ptr), intent(out) :: ref
+
+    integer (c_int) :: i, status
+    character (len=n, kind=c_char) :: var_name_
+    character (len=BMI_MAX_TYPE_NAME, kind=c_char) :: var_type
+    integer, pointer :: idest(:)
+    real, pointer :: rdest(:)
+    double precision, pointer :: ddest(:)
+
+    do i = 1, n
+       var_name_(i:i) = var_name(i)
+    enddo
+
+    status = model_array(model_index)%get_var_type(var_name_, var_type)
+
+    select case(var_type)
+    case("integer")
+       status = model_array(model_index)%get_value_ref(var_name_, idest)
+       ref = c_loc(idest(1))
+       status = BMI_SUCCESS
+    case("real")
+       status = model_array(model_index)%get_value_ref(var_name_, rdest)
+       ref = c_loc(rdest(1))
+       status = BMI_SUCCESS
+    case("double precision")
+       status = model_array(model_index)%get_value_ref(var_name_, ddest)
+       ref = c_loc(ddest(1))
+       status = BMI_SUCCESS
+    case default
+       status = BMI_FAILURE
+    end select
+  end function bmi_get_value_ref
 
   !
   ! Set an integer variable's values.

@@ -22,6 +22,8 @@ int main(int argc, char *argv[]) {
   int var_nbytes;
   void *buffer;
   void *new;
+  /* void **ref; */
+  void *ref;
 
   // Get a new model.
   model = bmi_new();
@@ -166,6 +168,29 @@ int main(int argc, char *argv[]) {
     printf(" %6.1f", ((float *)buffer)[i]);
   }
   free(buffer);
+
+  // Get a reference to a (float) and check that it updates.
+  status = bmi_get_current_time(model, &time);
+  status = bmi_get_value_ref(model, var_name, nchars, &ref);
+  printf(" - values, dimensional, through ref, at time %6.1f:\n", time);
+  for (j = 0; j < grid_shape[1]; j++) {
+    for (i = 0; i < grid_shape[0]; i++) {
+      k = i + j*grid_shape[0];
+      printf(" %6.1f", ((float *)ref)[k]);
+    }
+    printf("\n");
+  }
+  status = bmi_update(model);
+  printf("- update status: %d\n", status);
+  status = bmi_get_current_time(model, &time);
+  printf(" - values, dimensional, through ref, at time %6.1f:\n", time);
+  for (j = 0; j < grid_shape[1]; j++) {
+    for (i = 0; i < grid_shape[0]; i++) {
+      k = i + j*grid_shape[0];
+      printf(" %6.1f", ((float *)ref)[k]);
+    }
+    printf("\n");
+  }
 
   // Clean up variables.
   free(grid_shape);
