@@ -49,3 +49,6 @@ int bmi_get_value_int(int model, char *var_name, int n, void *buffer, int size);
 int bmi_get_value_float(int model, char *var_name, int n, void *buffer, int size);
 int bmi_get_value_double(int model, char *var_name, int n, void *buffer, int size);
 
+int bmi_set_value_int(int model, char *var_name, int n, void *buffer, int size);
+int bmi_set_value_float(int model, char *var_name, int n, void *buffer, int size);
+int bmi_set_value_double(int model, char *var_name, int n, void *buffer, int size);

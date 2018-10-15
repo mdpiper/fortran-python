@@ -21,6 +21,7 @@ int main(int argc, char *argv[]) {
   char *var_type;
   int var_nbytes;
   void *buffer;
+  void *new;
 
   // Get a new model.
   model = bmi_new();
@@ -148,6 +149,21 @@ int main(int argc, char *argv[]) {
       printf(" %6.1f", ((float *)buffer)[k]);
     }
     printf("\n");
+  }
+  free(buffer);
+
+  // Set values (float).
+  new = malloc(grid_size * sizeof(float));
+  for (i = 0; i < grid_size; i++) {
+    ((float *)new)[i] = (float)i;
+  }
+  status = bmi_set_value_float(model, var_name, nchars, new, grid_size);
+  free(new);
+  buffer = malloc(grid_size * sizeof(float));
+  status = bmi_get_value_float(model, var_name, nchars, buffer, grid_size);
+  printf(" - new values (set/get), streamwise:\n");
+  for (i = 0; i < grid_size; i++) {
+    printf(" %6.1f", ((float *)buffer)[i]);
   }
   free(buffer);
 

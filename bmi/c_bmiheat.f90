@@ -551,7 +551,7 @@ contains
     integer (c_int), intent(in), value :: n
     character (len=1, kind=c_char), intent(in) :: var_name(n)
     integer (c_int), intent(in), value :: m
-    integer (c_int),  intent(out) :: buffer(m) ! (1)
+    integer (c_int), intent(out) :: buffer(m) ! (1)
 
     integer (c_int) :: i, status
     character (len=n, kind=c_char) :: var_name_
@@ -572,7 +572,7 @@ contains
     integer (c_int), intent(in), value :: n
     character (len=1, kind=c_char), intent(in) :: var_name(n)
     integer (c_int), intent(in), value :: m
-    real (c_float),  intent(out) :: buffer(m)  ! (1)
+    real (c_float), intent(out) :: buffer(m)  ! (1)
 
     integer (c_int) :: i, status
     character (len=n, kind=c_char) :: var_name_
@@ -599,7 +599,7 @@ contains
     integer (c_int), intent(in), value :: n
     character (len=1, kind=c_char), intent(in) :: var_name(n)
     integer (c_int), intent(in), value :: m
-    real (c_double),  intent(out) :: buffer(m)  ! (1)
+    real (c_double), intent(out) :: buffer(m)  ! (1)
 
     integer (c_int) :: i, status
     character (len=n, kind=c_char) :: var_name_
@@ -610,5 +610,71 @@ contains
 
     status = model_array(model_index)%get_value(var_name_, buffer)
   end function bmi_get_value_double
+
+  !
+  ! Set an integer variable's values.
+  !
+  function bmi_set_value_int(model_index, var_name, n, buffer, m) &
+       bind(c) result(status) ! (2)
+    integer (c_int), intent(in), value :: model_index
+    integer (c_int), intent(in), value :: n
+    character (len=1, kind=c_char), intent(in) :: var_name(n)
+    integer (c_int), intent(in), value :: m
+    integer (c_int), intent(in) :: buffer(m) ! (1)
+
+    integer (c_int) :: i, status
+    character (len=n, kind=c_char) :: var_name_
+
+    do i = 1, n
+       var_name_(i:i) = var_name(i)
+    enddo
+
+    status = model_array(model_index)%set_value(var_name_, buffer)
+  end function bmi_set_value_int
+
+  !
+  ! Set a float variable's values.
+  !
+  function bmi_set_value_float(model_index, var_name, n, buffer, m) &
+       bind(c) result(status) ! (2)
+    integer (c_int), intent(in), value :: model_index
+    integer (c_int), intent(in), value :: n
+    character (len=1, kind=c_char), intent(in) :: var_name(n)
+    integer (c_int), intent(in), value :: m
+    real (c_float), intent(in) :: buffer(m) ! (1)
+
+    integer (c_int) :: i, status
+    character (len=n, kind=c_char) :: var_name_
+
+    do i = 1, n
+       var_name_(i:i) = var_name(i)
+    enddo
+
+    status = model_array(model_index)%set_value(var_name_, buffer)
+
+    ! (1) Can't have assumed-shape array `buffer(:)` with bind(c).
+    ! (2) Can't have type-bound (therefore generic) procedures with bind(c).
+  end function bmi_set_value_float
+
+  !
+  ! Set a double precision variable's values.
+  !
+  function bmi_set_value_double(model_index, var_name, n, buffer, m) &
+       bind(c) result(status) ! (2)
+    integer (c_int), intent(in), value :: model_index
+    integer (c_int), intent(in), value :: n
+    character (len=1, kind=c_char), intent(in) :: var_name(n)
+    integer (c_int), intent(in), value :: m
+    real (c_double), intent(in) :: buffer(m) ! (1)
+
+    integer (c_int) :: i, status
+    character (len=n, kind=c_char) :: var_name_
+
+    do i = 1, n
+       var_name_(i:i) = var_name(i)
+    enddo
+
+    status = model_array(model_index)%set_value(var_name_, buffer)
+  end function bmi_set_value_double
 
 end module c_bmiheat
