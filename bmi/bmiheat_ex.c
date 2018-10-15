@@ -22,7 +22,6 @@ int main(int argc, char *argv[]) {
   int var_nbytes;
   void *buffer;
   void *new;
-  /* void **ref; */
   void *ref;
 
   // Get a new model.
@@ -169,7 +168,7 @@ int main(int argc, char *argv[]) {
   }
   free(buffer);
 
-  // Get a reference to a (float) and check that it updates.
+  // Get a reference to a (float) variable and check that it updates.
   status = bmi_get_current_time(model, &time);
   status = bmi_get_value_ref(model, var_name, nchars, &ref);
   printf(" - values, dimensional, through ref, at time %6.1f:\n", time);
