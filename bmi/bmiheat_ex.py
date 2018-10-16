@@ -73,6 +73,14 @@ check = m.get_value(var_name)
 print(' - new values (set/get, streamwise):');
 print(check)
 
+# Get a reference to the temperature values and check that it updates.
+print(' - values (by ref, streamwise) at time {}:'.format(m.get_current_time()))
+ref = m.get_value_ref(var_name)
+print(ref)
+m.update()
+print(' - values (by ref, streamwise) at time {}:'.format(m.get_current_time()))
+print(ref)
+
 # Get the grid_id for the plate_surface__thermal_diffusivity variable.
 var_name = 'plate_surface__thermal_diffusivity'
 print('Variable {}'.format(var_name))
@@ -124,7 +132,6 @@ val = m.get_value(var_name)
 print(val)
 
 # Set new model id.
-# new = np.arange(grid_size, dtype=np.float32)  # 'real*4 in Fortran
 new = np.array(42, dtype=np.intc)
 m.set_value(var_name, new)
 check = m.get_value(var_name)

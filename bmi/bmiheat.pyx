@@ -46,6 +46,7 @@ cdef extern from "c_bmiheat.h":
                             void *buffer, int size)
     int bmi_get_value_double(int model, char *var_name, int n,
                              void *buffer, int size)
+    int bmi_get_value_ref(int model, char *var_name, int n, void **ref)
     int bmi_set_value_int(int model, char *var_name, int n,
                            void *buffer, int size)
     int bmi_set_value_float(int model, char *var_name, int n,
@@ -355,6 +356,23 @@ cdef class Heat:
 
         return buffer
 
+    cpdef get_value_ref(self, var_name):
+        cdef int grid_id = self.get_var_grid(var_name)
+        cdef int grid_size = self.get_grid_size(grid_id)
+        type = self.get_var_type(var_name)
+
+        _var_name = bytes(var_name.encode('utf-8'))
+        cdef void* ptr
+        ok_or_raise(bmi_get_value_ref(self._bmi, _var_name,
+                                      len(var_name), &ptr))
+
+        if type.startswith('double'):
+            return np.asarray(<np.float64_t[:grid_size]>ptr)
+        elif type.startswith('int'):
+            return np.asarray(<np.int32_t[:grid_size]>ptr)
+        else:
+            return np.asarray(<np.float32_t[:grid_size]>ptr)
+
     cpdef set_value(self, var_name, np.ndarray buffer):
         cdef int grid_id = self.get_var_grid(var_name)
         cdef int grid_size = self.get_grid_size(grid_id)
@@ -363,16 +381,14 @@ cdef class Heat:
         _var_name = bytes(var_name.encode('utf-8'))
 
         if type.startswith('double'):
-            status = <int>bmi_set_value_double(self._bmi, _var_name,
-                                               len(var_name),
-                                               buffer.data, grid_size)
+            ok_or_raise(<int>bmi_set_value_double(self._bmi, _var_name,
+                                                  len(var_name),
+                                                  buffer.data, grid_size))
         elif type.startswith('int'):
-            status = <int>bmi_set_value_int(self._bmi, _var_name,
-                                            len(var_name),
-                                            buffer.data, grid_size)
+            ok_or_raise(<int>bmi_set_value_int(self._bmi, _var_name,
+                                               len(var_name),
+                                               buffer.data, grid_size))
         else:
-            status = <int>bmi_set_value_float(self._bmi, _var_name,
-                                              len(var_name),
-                                              buffer.data, grid_size)
-
-        ok_or_raise(status)
+            ok_or_raise(<int>bmi_set_value_float(self._bmi, _var_name,
+                                                 len(var_name),
+                                                 buffer.data, grid_size))
