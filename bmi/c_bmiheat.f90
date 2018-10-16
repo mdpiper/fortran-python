@@ -161,7 +161,7 @@ contains
   !
   function bmi_get_start_time(model_index, time) bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
-    real (c_float), intent(out) :: time
+    real (c_double), intent(out) :: time
     integer (c_int) :: status
 
     status = model_array(model_index)%get_start_time(time)
@@ -172,7 +172,7 @@ contains
   !
   function bmi_get_end_time(model_index, time) bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
-    real (c_float), intent(out) :: time
+    real (c_double), intent(out) :: time
     integer (c_int) :: status
 
     status = model_array(model_index)%get_end_time(time)
@@ -183,7 +183,7 @@ contains
   !
   function bmi_get_current_time(model_index, time) bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
-    real (c_float), intent(out) :: time
+    real (c_double), intent(out) :: time
     integer (c_int) :: status
 
     status = model_array(model_index)%get_current_time(time)
@@ -195,7 +195,7 @@ contains
   function bmi_get_time_step(model_index, time_step) &
        bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
-    real (c_float), intent(out) :: time_step
+    real (c_double), intent(out) :: time_step
     integer (c_int) :: status
 
     status = model_array(model_index)%get_time_step(time_step)
@@ -242,7 +242,7 @@ contains
   !
   function bmi_update_frac(model_index, time_frac) bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
-    real (c_float), intent(in), value :: time_frac
+    real (c_double), intent(in), value :: time_frac
     integer (c_int) :: status
 
     status = model_array(model_index)%update_frac(time_frac)
@@ -253,7 +253,7 @@ contains
   !
   function bmi_update_until(model_index, time_later) bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
-    real (c_float), intent(in), value :: time_later
+    real (c_double), intent(in), value :: time_later
     integer (c_int) :: status
 
     status = model_array(model_index)%update_until(time_later)

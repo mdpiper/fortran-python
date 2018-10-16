@@ -10,7 +10,7 @@ int main(int argc, char *argv[]) {
   int nchars = strlen(config_file);
   char *component_name;
   char **input_var_names, **output_var_names;
-  float time;
+  double time;
   char *units;
   char *var_name;
   int grid_id;

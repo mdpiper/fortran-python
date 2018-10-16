@@ -15,15 +15,15 @@ int bmi_get_input_var_names(int model, char **names, int n);
 int bmi_get_output_var_name_count(int model, int *n);
 int bmi_get_output_var_names(int model, char **names, int n);
 
-int bmi_get_start_time(int model, float *time);
-int bmi_get_end_time(int model, float *time);
-int bmi_get_current_time(int model, float *time);
-int bmi_get_time_step(int model, float *time_step);
+int bmi_get_start_time(int model, double *time);
+int bmi_get_end_time(int model, double *time);
+int bmi_get_current_time(int model, double *time);
+int bmi_get_time_step(int model, double *time_step);
 int bmi_get_time_units(int model, char *time_units, int n);
 
 int bmi_update(int model);
-int bmi_update_frac(int model, float time_frac);
-int bmi_update_until(int model, float time_later);
+int bmi_update_frac(int model, double time_frac);
+int bmi_update_until(int model, double time_later);
 
 int bmi_get_var_grid(int model, char *var_name, int n, int *grid_id);
 
