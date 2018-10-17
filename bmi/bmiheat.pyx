@@ -87,6 +87,7 @@ def to_string(bytes):
 cdef class Heat:
 
     cdef int _bmi
+    cdef char[2048] STR_BUFFER
 
     def __cinit__(self):
         self._bmi = bmi_new()
@@ -94,6 +95,9 @@ cdef class Heat:
         if self._bmi < 0:
             raise MemoryError('out of range model index: {}'
                               .format(self._bmi))
+
+    cdef void reset_buffer(self):
+        self.STR_BUFFER = np.zeros(BMI_MAX_VAR_NAME, dtype=np.byte)
 
     def initialize(self, config_file):
         n = len(config_file)
@@ -105,11 +109,10 @@ cdef class Heat:
         ok_or_raise(status)
 
     def get_component_name(self):
-        name = ' '*BMI_MAX_COMPONENT_NAME
-        bname = to_bytes(name)
-        ok_or_raise(bmi_get_component_name(self._bmi, bname,
+        self.reset_buffer()
+        ok_or_raise(<int>bmi_get_component_name(self._bmi, self.STR_BUFFER,
                                            BMI_MAX_COMPONENT_NAME))
-        return to_string(bname)
+        return to_string(self.STR_BUFFER)
 
     cpdef int get_input_var_name_count(self):
         cdef int count = 0
@@ -198,11 +201,10 @@ cdef class Heat:
         return step
 
     def get_time_units(self):
-        units = ' '*BMI_MAX_UNITS_NAME
-        bunits = to_bytes(units)
-        ok_or_raise(bmi_get_time_units(self._bmi, bunits,
+        self.reset_buffer()
+        ok_or_raise(bmi_get_time_units(self._bmi, self.STR_BUFFER,
                                        BMI_MAX_UNITS_NAME))
-        return to_string(bunits)
+        return to_string(self.STR_BUFFER)
 
     def update(self):
         status = bmi_update(self._bmi)
@@ -224,11 +226,10 @@ cdef class Heat:
         return grid_id
 
     def get_grid_type(self, grid_id):
-        grid_type = ' '*BMI_MAX_TYPE_NAME
-        bgrid_type = to_bytes(grid_type)
-        ok_or_raise(bmi_get_grid_type(self._bmi, grid_id, bgrid_type,
+        self.reset_buffer()
+        ok_or_raise(bmi_get_grid_type(self._bmi, grid_id, self.STR_BUFFER,
                                        BMI_MAX_TYPE_NAME))
-        return to_string(bgrid_type)
+        return to_string(self.STR_BUFFER)
 
     def get_grid_rank(self, grid_id):
         cdef int rank
@@ -305,20 +306,22 @@ cdef class Heat:
         return offset
 
     def get_var_type(self, var_name):
-        var_type = to_bytes(' '*BMI_MAX_TYPE_NAME)
+        self.reset_buffer()
         ok_or_raise(<int>bmi_get_var_type(self._bmi,
                                           to_bytes(var_name),
-                                          len(var_name), var_type,
+                                          len(var_name),
+                                          self.STR_BUFFER,
                                           BMI_MAX_TYPE_NAME))
-        return to_string(var_type)
+        return to_string(self.STR_BUFFER)
 
     def get_var_units(self, var_name):
-        var_units = to_bytes(' '*BMI_MAX_UNITS_NAME)
+        self.reset_buffer()
         ok_or_raise(<int>bmi_get_var_units(self._bmi,
                                            to_bytes(var_name),
-                                           len(var_name), var_units,
+                                           len(var_name),
+                                           self.STR_BUFFER,
                                            BMI_MAX_UNITS_NAME))
-        return to_string(var_units)
+        return to_string(self.STR_BUFFER)
 
     def get_var_itemsize(self, var_name):
         cdef int itemsize
