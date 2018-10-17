@@ -8,24 +8,31 @@ cdef extern from "c_bmiheat.h":
     int BMI_MAX_VAR_NAME
     int BMI_MAX_TYPE_NAME
     int BMI_MAX_UNITS_NAME
+
     int bmi_new()
-    int bmi_initialize(int model, char *config_file, int n)
+
+    int bmi_initialize(int model, const char *config_file, int n_chars)
+    int bmi_update(int model)
+    int bmi_update_until(int model, double until)
+    int bmi_update_frac(int model, double frac)
     int bmi_finalize(int model)
-    int bmi_get_component_name(int model, char *name, int n)
-    int bmi_get_input_var_name_count(int model, int *n)
-    int bmi_get_input_var_names(int model, char **names, int n)
-    int bmi_get_output_var_name_count(int model, int *n)
-    int bmi_get_output_var_names(int model, char **names, int n)
+
+    int bmi_get_component_name(int model, char *name, int n_chars)
+    int bmi_get_input_var_name_count(int model, int *count)
+    int bmi_get_output_var_name_count(int model, int *count)
+    int bmi_get_input_var_names(int model, char **names, int n_names)
+    int bmi_get_output_var_names(int model, char **names, int n_names)
+
     int bmi_get_start_time(int model, double *time)
     int bmi_get_end_time(int model, double *time)
     int bmi_get_current_time(int model, double *time)
-    int bmi_get_time_step(int model, double *time_step)
-    int bmi_get_time_units(int model, char *time_units, int n)
-    int bmi_update(int model)
-    int bmi_update_frac(int model, double time_frac)
-    int bmi_update_until(int model, double time_later)
-    int bmi_get_var_grid(int model, char *var_name, int n, int *grid_id)
-    int bmi_get_grid_type(int model, int grid_id, char *type, int n)
+    int bmi_get_time_step(int model, double *time)
+    int bmi_get_time_units(int model, char *units, int n_chars)
+
+    int bmi_get_var_grid(int model, const char *var_name, int n_chars,
+                         int *grid_id)
+
+    int bmi_get_grid_type(int model, int grid_id, char *type, int n_chars)
     int bmi_get_grid_rank(int model, int grid_id, int *rank)
     int bmi_get_grid_shape(int model, int grid_id, int *shape, int rank)
     int bmi_get_grid_size(int model, int grid_id, int *size)
@@ -36,22 +43,31 @@ cdef extern from "c_bmiheat.h":
     int bmi_get_grid_z(int model, int grid_id, float *z, int size)
     int bmi_get_grid_connectivity(int model, int grid_id, int *conn, int size)
     int bmi_get_grid_offset(int model, int grid_id, int *offset, int size)
-    int bmi_get_var_type(int model, char *var_name, int n, char *type, int m)
-    int bmi_get_var_units(int model, char *var_name, int n, char *units, int m)
-    int bmi_get_var_itemsize(int model, char *var_name, int n, int *itemsize)
-    int bmi_get_var_nbytes(int model, char *var_name, int n, int *nbytes)
-    int bmi_get_value_int(int model, char *var_name, int n,
+
+    int bmi_get_var_type(int model, const char *var_name, int n_chars,
+                         char *type, int m_chars)
+    int bmi_get_var_units(int model, const char *var_name, int n_chars,
+                          char *units, int m_chars)
+    int bmi_get_var_itemsize(int model, const char *var_name,
+                             int n_chars, int *itemsize)
+    int bmi_get_var_nbytes(int model, const char *var_name,
+                           int n_chars, int *nbytes)
+
+    int bmi_get_value_int(int model, const char *var_name, int n_chars,
                           void *buffer, int size)
-    int bmi_get_value_float(int model, char *var_name, int n,
+    int bmi_get_value_float(int model, const char *var_name, int n_chars,
                             void *buffer, int size)
-    int bmi_get_value_double(int model, char *var_name, int n,
+    int bmi_get_value_double(int model, const char *var_name, int n_chars,
                              void *buffer, int size)
-    int bmi_get_value_ref(int model, char *var_name, int n, void **ref)
-    int bmi_set_value_int(int model, char *var_name, int n,
+
+    int bmi_get_value_ref(int model, const char *var_name,
+                          int n_chars, void **ref)
+
+    int bmi_set_value_int(int model, const char *var_name, int n_chars,
                            void *buffer, int size)
-    int bmi_set_value_float(int model, char *var_name, int n,
+    int bmi_set_value_float(int model, const char *var_name, int n_chars,
                              void *buffer, int size)
-    int bmi_set_value_double(int model, char *var_name, int n,
+    int bmi_set_value_double(int model, const char *var_name, int n_chars,
                               void *buffer, int size)
 
 
