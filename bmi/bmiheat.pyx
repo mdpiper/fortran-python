@@ -76,11 +76,11 @@ def ok_or_raise(status):
         raise RuntimeError('error code {status}'.format(status=status))
 
 
-def to_bytes(string):
+cpdef to_bytes(string):
     return bytes(string.encode('utf-8'))
 
 
-def to_string(bytes):
+cpdef to_string(bytes):
     return bytes.decode('utf-8').rstrip()
 
 
@@ -100,17 +100,18 @@ cdef class Heat:
         self.STR_BUFFER = np.zeros(BMI_MAX_VAR_NAME, dtype=np.byte)
 
     def initialize(self, config_file):
-        n = len(config_file)
-        status = bmi_initialize(self._bmi, to_bytes(config_file), n)
+        status = <int>bmi_initialize(self._bmi, to_bytes(config_file),
+                                     len(config_file))
         ok_or_raise(status)
 
     def finalize(self):
-        status = bmi_finalize(self._bmi)
+        status = <int>bmi_finalize(self._bmi)
         ok_or_raise(status)
 
-    def get_component_name(self):
+    cpdef object get_component_name(self):
         self.reset_buffer()
-        ok_or_raise(<int>bmi_get_component_name(self._bmi, self.STR_BUFFER,
+        ok_or_raise(<int>bmi_get_component_name(self._bmi,
+                                           self.STR_BUFFER,
                                            BMI_MAX_COMPONENT_NAME))
         return to_string(self.STR_BUFFER)
 
@@ -119,7 +120,7 @@ cdef class Heat:
         ok_or_raise(<int>bmi_get_input_var_name_count(self._bmi, &count))
         return count
 
-    def get_input_var_names(self):
+    cpdef object get_input_var_names(self):
         cdef list py_names = []
         cdef char** names
         cdef int i
@@ -152,7 +153,7 @@ cdef class Heat:
         ok_or_raise(<int>bmi_get_output_var_name_count(self._bmi, &count))
         return count
 
-    def get_output_var_names(self):
+    cpdef object get_output_var_names(self):
         cdef list py_names = []
         cdef char** names
         cdef int i
@@ -180,68 +181,69 @@ cdef class Heat:
 
         return tuple(py_names)
 
-    def get_start_time(self):
+    cpdef double get_start_time(self):
         cdef double time
         ok_or_raise(<int>bmi_get_start_time(self._bmi, &time))
         return time
 
-    def get_end_time(self):
+    cpdef double get_end_time(self):
         cdef double time
         ok_or_raise(<int>bmi_get_end_time(self._bmi, &time))
         return time
 
-    def get_current_time(self):
+    cpdef double get_current_time(self):
         cdef double time
         ok_or_raise(<int>bmi_get_current_time(self._bmi, &time))
         return time
 
-    def get_time_step(self):
+    cpdef double get_time_step(self):
         cdef double step
         ok_or_raise(<int>bmi_get_time_step(self._bmi, &step))
         return step
 
-    def get_time_units(self):
+    cpdef object get_time_units(self):
         self.reset_buffer()
-        ok_or_raise(bmi_get_time_units(self._bmi, self.STR_BUFFER,
+        ok_or_raise(<int>bmi_get_time_units(self._bmi, self.STR_BUFFER,
                                        BMI_MAX_UNITS_NAME))
         return to_string(self.STR_BUFFER)
 
-    def update(self):
-        status = bmi_update(self._bmi)
+    cpdef update(self):
+        status = <int>bmi_update(self._bmi)
         ok_or_raise(status)
 
-    def update_frac(self, time_frac):
-        status = bmi_update_frac(self._bmi, time_frac)
+    cpdef update_frac(self, time_frac):
+        status = <int>bmi_update_frac(self._bmi, time_frac)
         ok_or_raise(status)
 
-    def update_until(self, time_later):
-        status = bmi_update_until(self._bmi, time_later)
+    cpdef update_until(self, time_later):
+        status = <int>bmi_update_until(self._bmi, time_later)
         ok_or_raise(status)
 
-    def get_var_grid(self, var_name):
+    cpdef int get_var_grid(self, var_name):
         cdef int grid_id
         ok_or_raise(<int>bmi_get_var_grid(self._bmi,
                                           to_bytes(var_name),
                                           len(var_name), &grid_id))
         return grid_id
 
-    def get_grid_type(self, grid_id):
+    cpdef object get_grid_type(self, grid_id):
         self.reset_buffer()
-        ok_or_raise(bmi_get_grid_type(self._bmi, grid_id, self.STR_BUFFER,
+        ok_or_raise(<int>bmi_get_grid_type(self._bmi, grid_id,
+                                       self.STR_BUFFER,
                                        BMI_MAX_TYPE_NAME))
         return to_string(self.STR_BUFFER)
 
-    def get_grid_rank(self, grid_id):
+    cpdef int get_grid_rank(self, grid_id):
         cdef int rank
         ok_or_raise(<int>bmi_get_grid_rank(self._bmi, grid_id, &rank))
         return rank
 
-    def get_grid_size(self, grid_id):
+    cpdef int get_grid_size(self, grid_id):
         cdef int size
         ok_or_raise(<int>bmi_get_grid_size(self._bmi, grid_id, &size))
         return size
 
-    def get_grid_shape(self, grid_id):
+    cpdef np.ndarray get_grid_shape(self, grid_id):
         cdef int rank = self.get_grid_rank(grid_id)
         cdef np.ndarray[int, ndim=1, mode="c"] \
             shape = np.empty(rank, dtype=np.intc)
@@ -249,7 +251,7 @@ cdef class Heat:
                                             &shape[0], rank))
         return shape
 
-    def get_grid_spacing(self, grid_id):
+    cpdef np.ndarray get_grid_spacing(self, grid_id):
         cdef int rank = self.get_grid_rank(grid_id)
         cdef np.ndarray[float, ndim=1, mode="c"] \
             spacing = np.empty(rank, dtype=np.float32)
@@ -257,7 +259,7 @@ cdef class Heat:
                                               &spacing[0], rank))
         return spacing
 
-    def get_grid_origin(self, grid_id):
+    cpdef np.ndarray get_grid_origin(self, grid_id):
         cdef int rank = self.get_grid_rank(grid_id)
         cdef np.ndarray[float, ndim=1, mode="c"] \
             origin = np.empty(rank, dtype=np.float32)
@@ -265,7 +267,7 @@ cdef class Heat:
                                              &origin[0], rank))
         return origin
 
-    def get_grid_x(self, grid_id):
+    cpdef np.ndarray get_grid_x(self, grid_id):
         cdef int size = self.get_grid_size(grid_id)
         cdef np.ndarray[float, ndim=1, mode="c"] \
             grid_x = np.empty(size, dtype=np.float32)
@@ -273,7 +275,7 @@ cdef class Heat:
                                         &grid_x[0], size))
         return grid_x
 
-    def get_grid_y(self, grid_id):
+    cpdef np.ndarray get_grid_y(self, grid_id):
         cdef int size = self.get_grid_size(grid_id)
         cdef np.ndarray[float, ndim=1, mode="c"] \
             grid_y = np.empty(size, dtype=np.float32)
@@ -281,7 +283,7 @@ cdef class Heat:
                                         &grid_y[0], size))
         return grid_y
 
-    def get_grid_z(self, grid_id):
+    cpdef np.ndarray get_grid_z(self, grid_id):
         cdef int size = self.get_grid_size(grid_id)
         cdef np.ndarray[float, ndim=1, mode="c"] \
             grid_z = np.empty(size, dtype=np.float32)
@@ -289,7 +291,7 @@ cdef class Heat:
                                         &grid_z[0], size))
         return grid_z
 
-    def get_grid_connectivity(self, grid_id):
+    cpdef np.ndarray get_grid_connectivity(self, grid_id):
         cdef int size = self.get_grid_size(grid_id)
         cdef np.ndarray[int, ndim=1, mode="c"] \
             conn = np.empty(size, dtype=np.intc)
@@ -297,7 +299,7 @@ cdef class Heat:
                                                    &conn[0], size))
         return conn
 
-    def get_grid_offset(self, grid_id):
+    cpdef np.ndarray get_grid_offset(self, grid_id):
         cdef int size = self.get_grid_size(grid_id)
         cdef np.ndarray[int, ndim=1, mode="c"] \
             offset = np.empty(size, dtype=np.intc)
@@ -305,7 +307,7 @@ cdef class Heat:
                                              &offset[0], size))
         return offset
 
-    def get_var_type(self, var_name):
+    cpdef object get_var_type(self, var_name):
         self.reset_buffer()
         ok_or_raise(<int>bmi_get_var_type(self._bmi,
                                           to_bytes(var_name),
@@ -314,7 +316,7 @@ cdef class Heat:
                                           BMI_MAX_TYPE_NAME))
         return to_string(self.STR_BUFFER)
 
-    def get_var_units(self, var_name):
+    cpdef object get_var_units(self, var_name):
         self.reset_buffer()
         ok_or_raise(<int>bmi_get_var_units(self._bmi,
                                            to_bytes(var_name),
@@ -323,21 +325,21 @@ cdef class Heat:
                                            BMI_MAX_UNITS_NAME))
         return to_string(self.STR_BUFFER)
 
-    def get_var_itemsize(self, var_name):
+    cpdef int get_var_itemsize(self, var_name):
         cdef int itemsize
         ok_or_raise(<int>bmi_get_var_itemsize(self._bmi,
                                               to_bytes(var_name),
                                               len(var_name), &itemsize))
         return itemsize
 
-    def get_var_nbytes(self, var_name):
+    cpdef int get_var_nbytes(self, var_name):
         cdef int nbytes
         ok_or_raise(<int>bmi_get_var_nbytes(self._bmi,
                                             to_bytes(var_name),
                                             len(var_name), &nbytes))
         return nbytes
 
-    def get_value_int(self, var_name, grid_size):
+    cpdef np.ndarray get_value_int(self, var_name, grid_size):
         cdef np.ndarray[int, ndim=1, mode="c"] \
             buffer = np.empty(grid_size, dtype=np.intc)
         ok_or_raise(<int>bmi_get_value_int(self._bmi,
@@ -346,7 +348,7 @@ cdef class Heat:
                                            grid_size))
         return buffer
 
-    def get_value_float(self, var_name, grid_size):
+    cpdef np.ndarray get_value_float(self, var_name, grid_size):
         cdef np.ndarray[float, ndim=1, mode="c"] \
             buffer = np.empty(grid_size, dtype=np.float32)
         ok_or_raise(<int>bmi_get_value_float(self._bmi,
@@ -355,7 +357,7 @@ cdef class Heat:
                                              buffer.data, grid_size))
         return buffer
 
-    def get_value_double(self, var_name, grid_size):
+    cpdef np.ndarray get_value_double(self, var_name, grid_size):
         cdef np.ndarray[double, ndim=1, mode="c"] \
             buffer = np.empty(grid_size, dtype=np.float64)
         ok_or_raise(<int>bmi_get_value_double(self._bmi,
@@ -364,7 +366,7 @@ cdef class Heat:
                                               buffer.data, grid_size))
         return buffer
 
-    def get_value(self, var_name):
+    cpdef np.ndarray get_value(self, var_name):
         cdef int grid_id = self.get_var_grid(var_name)
         cdef int grid_size = self.get_grid_size(grid_id)
         type = self.get_var_type(var_name)
@@ -378,13 +380,13 @@ cdef class Heat:
 
         return buffer
 
-    cpdef get_value_ref(self, var_name):
+    cpdef np.ndarray get_value_ref(self, var_name):
         cdef int grid_id = self.get_var_grid(var_name)
         cdef int grid_size = self.get_grid_size(grid_id)
         cdef void* ptr
         type = self.get_var_type(var_name)
 
-        ok_or_raise(bmi_get_value_ref(self._bmi, to_bytes(var_name),
+        ok_or_raise(<int>bmi_get_value_ref(self._bmi, to_bytes(var_name),
                                       len(var_name), &ptr))
 
         if type.startswith('double'):
