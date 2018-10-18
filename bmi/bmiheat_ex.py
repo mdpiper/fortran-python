@@ -66,7 +66,8 @@ print(' - itemsize:', m.get_var_itemsize(var_name))
 print(' - nbytes:', m.get_var_nbytes(var_name))
 
 # Get the temperature values.
-val = m.get_value(var_name)
+val = np.empty(grid_shape, dtype=np.float32)
+m.get_value(var_name, val)
 print(' - values (streamwise):')
 print(val)
 print(' - values (gridded):')
@@ -75,7 +76,8 @@ print(val.reshape(np.roll(grid_shape, 1)))
 # Set new temperature values.
 new = np.arange(grid_size, dtype=np.float32)  # 'real*4 in Fortran
 m.set_value(var_name, new)
-check = m.get_value(var_name)
+check = np.empty(grid_shape, dtype=np.float32)
+m.get_value(var_name, check)
 print(' - new values (set/get, streamwise):');
 print(check)
 
@@ -119,8 +121,9 @@ print(' - itemsize:', m.get_var_itemsize(var_name))
 print(' - nbytes:', m.get_var_nbytes(var_name))
 
 # Get the diffusivity values.
+val = np.empty(1, dtype=np.float32)
+m.get_value(var_name, val)
 print(' - values:')
-val = m.get_value(var_name)
 print(val)
 
 # Get the grid_id for the model__identification_number variable.
@@ -155,14 +158,16 @@ print(' - itemsize:', m.get_var_itemsize(var_name))
 print(' - nbytes:', m.get_var_nbytes(var_name))
 
 # Get the model id.
+val = np.empty(1, dtype=np.int32)
+m.get_value(var_name, val)
 print(' - values:')
-val = m.get_value(var_name)
 print(val)
 
 # Set new model id.
 new = np.array(42, dtype=np.intc)
 m.set_value(var_name, new)
-check = m.get_value(var_name)
+check = np.empty(1, dtype=np.int32)
+m.get_value(var_name, check)
 print(' - new values (set/get):');
 print(check)
 
