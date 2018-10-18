@@ -177,26 +177,23 @@ cdef class Heat:
         ok_or_raise(<int>bmi.get_grid_size(self._bmi, grid_id, &size))
         return size
 
-    cpdef np.ndarray get_grid_shape(self, grid_id):
+    cpdef np.ndarray get_grid_shape(self, grid_id, \
+                                    np.ndarray[int, ndim=1] shape):
         cdef int rank = self.get_grid_rank(grid_id)
-        cdef np.ndarray[int, ndim=1, mode="c"] \
-            shape = np.empty(rank, dtype=np.intc)
         ok_or_raise(<int>bmi.get_grid_shape(self._bmi, grid_id,
                                             &shape[0], rank))
         return shape
 
-    cpdef np.ndarray get_grid_spacing(self, grid_id):
+    cpdef np.ndarray get_grid_spacing(self, grid_id, \
+                                      np.ndarray[float, ndim=1] spacing):
         cdef int rank = self.get_grid_rank(grid_id)
-        cdef np.ndarray[float, ndim=1, mode="c"] \
-            spacing = np.empty(rank, dtype=np.float32)
         ok_or_raise(<int>bmi.get_grid_spacing(self._bmi, grid_id,
                                               &spacing[0], rank))
         return spacing
 
-    cpdef np.ndarray get_grid_origin(self, grid_id):
+    cpdef np.ndarray get_grid_origin(self, grid_id, \
+                                      np.ndarray[float, ndim=1] origin):
         cdef int rank = self.get_grid_rank(grid_id)
-        cdef np.ndarray[float, ndim=1, mode="c"] \
-            origin = np.empty(rank, dtype=np.float32)
         ok_or_raise(<int>bmi.get_grid_origin(self._bmi, grid_id,
                                              &origin[0], rank))
         return origin
