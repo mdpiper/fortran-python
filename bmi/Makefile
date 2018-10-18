@@ -12,7 +12,7 @@ cython:
 	@date
 
 iop:
-	${FC} ${CFLAGS} ${FFLAGS} iop_${name}.f90
+	${FC} ${CFLAGS} ${FFLAGS} bmi_interoperability.f90
 	${CC} ${CFLAGS} ${name}_ex.c
 	${CC} ${LDFLAGS} *.o -l${FC} -o $@
 	@date

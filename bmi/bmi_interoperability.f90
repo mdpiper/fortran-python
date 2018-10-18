@@ -1,7 +1,7 @@
 !
 ! This is the interoperability layer ("iop") for the Fortran BMI.
 !
-module iop_bmiheat
+module bmi_interoperability
 
   use, intrinsic :: iso_c_binding
   use bmif, only: BMI_SUCCESS, BMI_FAILURE, BMI_MAX_VAR_NAME, BMI_MAX_TYPE_NAME
@@ -18,7 +18,7 @@ contains
   !
   ! Find the next unused model index in the array.
   !
-  function iop_new() bind(c) result(model_index)
+  function new_model() bind(c) result(model_index)
     integer (c_int) :: model_index
     integer :: i
 
@@ -35,12 +35,12 @@ contains
        model_index = model_index + 1
        pmodel => model_array(model_index)
     end if
-  end function iop_new
+  end function new_model
 
   !
   ! Initialize one model in the array, based on the input index.
   !
-  function iop_initialize(model_index, config_file, n) &
+  function initialize(model_index, config_file, n) &
        bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(in), value :: n
@@ -54,22 +54,22 @@ contains
     enddo
 
     status = model_array(model_index)%initialize(config_file_)
-  end function iop_initialize
+  end function initialize
 
   !
   ! Clean up one model in the array.
   !
-  function iop_finalize(model_index) bind(c) result(status)
+  function finalize(model_index) bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     integer (c_int) :: status
 
     status = model_array(model_index)%finalize()
-  end function iop_finalize
+  end function finalize
 
   !
   ! Get the component name attribute.
   !
-  function iop_get_component_name(model_index, name, n) &
+  function get_component_name(model_index, name, n) &
        bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(in), value :: n
@@ -89,12 +89,12 @@ contains
         name(i) = name_(i:i)
     enddo
     name = name//C_NULL_CHAR
-  end function iop_get_component_name
+  end function get_component_name
 
   !
   ! Get the number of input variables.
   !
-  function iop_get_input_var_name_count(model_index, count) &
+  function get_input_var_name_count(model_index, count) &
        bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(out) :: count
@@ -104,12 +104,12 @@ contains
     status = model_array(model_index)%get_input_var_names(pnames)
     count = size(pnames)
     status = BMI_SUCCESS
-  end function iop_get_input_var_name_count
+  end function get_input_var_name_count
 
   !
   ! Get the names of the input variables.
   !
-  function iop_get_input_var_names(model_index, names, n) &
+  function get_input_var_names(model_index, names, n) &
        bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(in), value :: n
@@ -123,12 +123,12 @@ contains
        pnames(i) = trim(pnames(i))//C_NULL_CHAR
        names(i) = c_loc(pnames(i))
     enddo
-  end function iop_get_input_var_names
+  end function get_input_var_names
 
   !
   ! Get the number of output variables.
   !
-  function iop_get_output_var_name_count(model_index, count) &
+  function get_output_var_name_count(model_index, count) &
        bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(out) :: count
@@ -138,12 +138,12 @@ contains
     status = model_array(model_index)%get_output_var_names(pnames)
     count = size(pnames)
     status = BMI_SUCCESS
-  end function iop_get_output_var_name_count
+  end function get_output_var_name_count
 
   !
   ! Get the names of the output variables.
   !
-  function iop_get_output_var_names(model_index, names, n) &
+  function get_output_var_names(model_index, names, n) &
        bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(in), value :: n
@@ -157,57 +157,57 @@ contains
        pnames(i) = trim(pnames(i))//C_NULL_CHAR
        names(i) = c_loc(pnames(i))
     enddo
-  end function iop_get_output_var_names
+  end function get_output_var_names
 
   !
   ! Get the model start time.
   !
-  function iop_get_start_time(model_index, time) bind(c) result(status)
+  function get_start_time(model_index, time) bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     real (c_double), intent(out) :: time
     integer (c_int) :: status
 
     status = model_array(model_index)%get_start_time(time)
-  end function iop_get_start_time
+  end function get_start_time
 
   !
   ! Get the model stop time.
   !
-  function iop_get_end_time(model_index, time) bind(c) result(status)
+  function get_end_time(model_index, time) bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     real (c_double), intent(out) :: time
     integer (c_int) :: status
 
     status = model_array(model_index)%get_end_time(time)
-  end function iop_get_end_time
+  end function get_end_time
 
   !
   ! Get the current model time.
   !
-  function iop_get_current_time(model_index, time) bind(c) result(status)
+  function get_current_time(model_index, time) bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     real (c_double), intent(out) :: time
     integer (c_int) :: status
 
     status = model_array(model_index)%get_current_time(time)
-  end function iop_get_current_time
+  end function get_current_time
 
   !
   ! Get the model time step.
   !
-  function iop_get_time_step(model_index, time_step) &
+  function get_time_step(model_index, time_step) &
        bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     real (c_double), intent(out) :: time_step
     integer (c_int) :: status
 
     status = model_array(model_index)%get_time_step(time_step)
-  end function iop_get_time_step
+  end function get_time_step
 
   !
   ! Get the model time units.
   !
-  function iop_get_time_units(model_index, time_units, n) &
+  function get_time_units(model_index, time_units, n) &
        bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(in), value :: n
@@ -228,44 +228,44 @@ contains
         time_units(i) = time_units_(i:i)
     enddo
     time_units = time_units//C_NULL_CHAR
-  end function iop_get_time_units
+  end function get_time_units
 
   !
   ! Advance the model by one time step.
   !
-  function iop_update(model_index) bind(c) result(status)
+  function update(model_index) bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     integer (c_int) :: status
 
     status = model_array(model_index)%update()
-  end function iop_update
+  end function update
 
   !
   ! Advance the model by a fraction of a time step.
   !
-  function iop_update_frac(model_index, time_frac) bind(c) result(status)
+  function update_frac(model_index, time_frac) bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     real (c_double), intent(in), value :: time_frac
     integer (c_int) :: status
 
     status = model_array(model_index)%update_frac(time_frac)
-  end function iop_update_frac
+  end function update_frac
 
   !
   ! Advance the model to a time in the future.
   !
-  function iop_update_until(model_index, time_later) bind(c) result(status)
+  function update_until(model_index, time_later) bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     real (c_double), intent(in), value :: time_later
     integer (c_int) :: status
 
     status = model_array(model_index)%update_until(time_later)
-  end function iop_update_until
+  end function update_until
 
   !
   ! Get the grid identifier for a given variable.
   !
-  function iop_get_var_grid(model_index, var_name, n, grid_id) &
+  function get_var_grid(model_index, var_name, n, grid_id) &
        bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(in), value :: n
@@ -280,12 +280,12 @@ contains
     enddo
 
     status = model_array(model_index)%get_var_grid(var_name_, grid_id)
-  end function iop_get_var_grid
+  end function get_var_grid
 
   !
   ! Get the grid type for the specified variable.
   !
-  function iop_get_grid_type(model_index, grid_id, grid_type, n) &
+  function get_grid_type(model_index, grid_id, grid_type, n) &
        bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(in), value :: grid_id
@@ -305,12 +305,12 @@ contains
         grid_type(i) = grid_type_(i:i)
     enddo
     grid_type = grid_type//C_NULL_CHAR
-  end function iop_get_grid_type
+  end function get_grid_type
 
   !
   ! Get the number of dimensions of a grid.
   !
-  function iop_get_grid_rank(model_index, grid_id, grid_rank) &
+  function get_grid_rank(model_index, grid_id, grid_rank) &
        bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(in), value :: grid_id
@@ -318,12 +318,12 @@ contains
     integer (c_int) :: status
 
     status = model_array(model_index)%get_grid_rank(grid_id, grid_rank)
-  end function iop_get_grid_rank
+  end function get_grid_rank
 
   !
   ! Get the dimensions of a grid.
   !
-  function iop_get_grid_shape(model_index, grid_id, grid_shape, n) &
+  function get_grid_shape(model_index, grid_id, grid_shape, n) &
        bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(in), value :: grid_id
@@ -332,12 +332,12 @@ contains
     integer (c_int) :: status
 
     status = model_array(model_index)%get_grid_shape(grid_id, grid_shape)
-  end function iop_get_grid_shape
+  end function get_grid_shape
 
   !
   ! Get the total number of elements in a grid.
   !
-  function iop_get_grid_size(model_index, grid_id, grid_size) &
+  function get_grid_size(model_index, grid_id, grid_size) &
        bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(in), value :: grid_id
@@ -345,12 +345,12 @@ contains
     integer (c_int) :: status
 
     status = model_array(model_index)%get_grid_size(grid_id, grid_size)
-  end function iop_get_grid_size
+  end function get_grid_size
 
   !
   ! Get the spacing between grid elements in each dimension.
   !
-  function iop_get_grid_spacing(model_index, grid_id, grid_spacing, n) &
+  function get_grid_spacing(model_index, grid_id, grid_spacing, n) &
        bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(in), value :: grid_id
@@ -359,12 +359,12 @@ contains
     integer (c_int) :: status
 
     status = model_array(model_index)%get_grid_spacing(grid_id, grid_spacing)
-  end function iop_get_grid_spacing
+  end function get_grid_spacing
 
   !
   ! Get the origin of the grid.
   !
-  function iop_get_grid_origin(model_index, grid_id, grid_origin, n) &
+  function get_grid_origin(model_index, grid_id, grid_origin, n) &
        bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(in), value :: grid_id
@@ -373,12 +373,12 @@ contains
     integer (c_int) :: status
 
     status = model_array(model_index)%get_grid_origin(grid_id, grid_origin)
-  end function iop_get_grid_origin
+  end function get_grid_origin
 
   !
   ! Get the x-coordinates of a grid's nodes.
   !
-  function iop_get_grid_x(model_index, grid_id, grid_x, n) &
+  function get_grid_x(model_index, grid_id, grid_x, n) &
        bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(in), value :: grid_id
@@ -387,12 +387,12 @@ contains
     integer (c_int) :: status
 
     status = model_array(model_index)%get_grid_x(grid_id, grid_x)
-  end function iop_get_grid_x
+  end function get_grid_x
 
   !
   ! Get the y-coordinates of a grid's nodes.
   !
-  function iop_get_grid_y(model_index, grid_id, grid_y, n) &
+  function get_grid_y(model_index, grid_id, grid_y, n) &
        bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(in), value :: grid_id
@@ -401,12 +401,12 @@ contains
     integer (c_int) :: status
 
     status = model_array(model_index)%get_grid_y(grid_id, grid_y)
-  end function iop_get_grid_y
+  end function get_grid_y
 
   !
   ! Get the z-coordinates of a grid's nodes.
   !
-  function iop_get_grid_z(model_index, grid_id, grid_z, n) &
+  function get_grid_z(model_index, grid_id, grid_z, n) &
        bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(in), value :: grid_id
@@ -415,12 +415,12 @@ contains
     integer (c_int) :: status
 
     status = model_array(model_index)%get_grid_z(grid_id, grid_z)
-  end function iop_get_grid_z
+  end function get_grid_z
 
   !
   ! Get the connectivity of a grid's nodes.
   !
-  function iop_get_grid_connectivity(model_index, grid_id, grid_conn, n) &
+  function get_grid_connectivity(model_index, grid_id, grid_conn, n) &
        bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(in), value :: grid_id
@@ -429,12 +429,12 @@ contains
     integer (c_int) :: status
 
     status = model_array(model_index)%get_grid_connectivity(grid_id, grid_conn)
-  end function iop_get_grid_connectivity
+  end function get_grid_connectivity
 
   !
   ! Get the offset of a grid's nodes.
   !
-  function iop_get_grid_offset(model_index, grid_id, grid_offset, n) &
+  function get_grid_offset(model_index, grid_id, grid_offset, n) &
        bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(in), value :: grid_id
@@ -443,12 +443,12 @@ contains
     integer (c_int) :: status
 
     status = model_array(model_index)%get_grid_offset(grid_id, grid_offset)
-  end function iop_get_grid_offset
+  end function get_grid_offset
 
   !
   ! Get the type for the specified variable.
   !
-  function iop_get_var_type(model_index, var_name, n, var_type, m) &
+  function get_var_type(model_index, var_name, n, var_type, m) &
        bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(in), value :: n
@@ -473,12 +473,12 @@ contains
         var_type(i) = var_type_(i:i)
     enddo
     var_type = var_type//C_NULL_CHAR
-  end function iop_get_var_type
+  end function get_var_type
 
   !
   ! Get the units for the specified variable.
   !
-  function iop_get_var_units(model_index, var_name, n, var_units, m) &
+  function get_var_units(model_index, var_name, n, var_units, m) &
        bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(in), value :: n
@@ -503,12 +503,12 @@ contains
         var_units(i) = var_units_(i:i)
     enddo
     var_units = var_units//C_NULL_CHAR
-  end function iop_get_var_units
+  end function get_var_units
 
   !
   ! Get the size of a single element of the specified variable.
   !
-  function iop_get_var_itemsize(model_index, var_name, n, var_itemsize) &
+  function get_var_itemsize(model_index, var_name, n, var_itemsize) &
        bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(in), value :: n
@@ -523,12 +523,12 @@ contains
     enddo
 
     status = model_array(model_index)%get_var_itemsize(var_name_, var_itemsize)
-  end function iop_get_var_itemsize
+  end function get_var_itemsize
 
   !
   ! Get the total number of bytes used by the specified variable.
   !
-  function iop_get_var_nbytes(model_index, var_name, n, var_nbytes) &
+  function get_var_nbytes(model_index, var_name, n, var_nbytes) &
        bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(in), value :: n
@@ -543,12 +543,12 @@ contains
     enddo
 
     status = model_array(model_index)%get_var_nbytes(var_name_, var_nbytes)
-  end function iop_get_var_nbytes
+  end function get_var_nbytes
 
   !
   ! Get a copy of an integer variable's values, flattened.
   !
-  function iop_get_value_int(model_index, var_name, n, buffer, m) &
+  function get_value_int(model_index, var_name, n, buffer, m) &
        bind(c) result(status) ! (2)
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(in), value :: n
@@ -564,12 +564,12 @@ contains
     enddo
 
     status = model_array(model_index)%get_value(var_name_, buffer)
-  end function iop_get_value_int
+  end function get_value_int
 
   !
   ! Get a copy of a float variable's values, flattened.
   !
-  function iop_get_value_float(model_index, var_name, n, buffer, m) &
+  function get_value_float(model_index, var_name, n, buffer, m) &
        bind(c) result(status) ! (2)
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(in), value :: n
@@ -591,12 +591,12 @@ contains
 
     ! (1) Can't have assumed-shape array `buffer(:)` with bind(c).
     ! (2) Can't have type-bound (therefore generic) procedures with bind(c).
-  end function iop_get_value_float
+  end function get_value_float
 
   !
   ! Get a copy of a double precision variable's values, flattened.
   !
-  function iop_get_value_double(model_index, var_name, n, buffer, m) &
+  function get_value_double(model_index, var_name, n, buffer, m) &
        bind(c) result(status) ! (2)
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(in), value :: n
@@ -612,12 +612,12 @@ contains
     enddo
 
     status = model_array(model_index)%get_value(var_name_, buffer)
-  end function iop_get_value_double
+  end function get_value_double
 
   !
   ! Get a reference to a variable's values.
   !
-  function iop_get_value_ref(model_index, var_name, n, ref) &
+  function get_value_ref(model_index, var_name, n, ref) &
        bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(in), value :: n
@@ -653,12 +653,12 @@ contains
     case default
        status = BMI_FAILURE
     end select
-  end function iop_get_value_ref
+  end function get_value_ref
 
   !
   ! Set an integer variable's values.
   !
-  function iop_set_value_int(model_index, var_name, n, buffer, m) &
+  function set_value_int(model_index, var_name, n, buffer, m) &
        bind(c) result(status) ! (2)
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(in), value :: n
@@ -674,12 +674,12 @@ contains
     enddo
 
     status = model_array(model_index)%set_value(var_name_, buffer)
-  end function iop_set_value_int
+  end function set_value_int
 
   !
   ! Set a float variable's values.
   !
-  function iop_set_value_float(model_index, var_name, n, buffer, m) &
+  function set_value_float(model_index, var_name, n, buffer, m) &
        bind(c) result(status) ! (2)
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(in), value :: n
@@ -698,12 +698,12 @@ contains
 
     ! (1) Can't have assumed-shape array `buffer(:)` with bind(c).
     ! (2) Can't have type-bound (therefore generic) procedures with bind(c).
-  end function iop_set_value_float
+  end function set_value_float
 
   !
   ! Set a double precision variable's values.
   !
-  function iop_set_value_double(model_index, var_name, n, buffer, m) &
+  function set_value_double(model_index, var_name, n, buffer, m) &
        bind(c) result(status) ! (2)
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(in), value :: n
@@ -719,6 +719,6 @@ contains
     enddo
 
     status = model_array(model_index)%set_value(var_name_, buffer)
-  end function iop_set_value_double
+  end function set_value_double
 
-end module iop_bmiheat
+end module bmi_interoperability
