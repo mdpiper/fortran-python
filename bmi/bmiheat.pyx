@@ -96,7 +96,7 @@ cdef class Heat:
             raise MemoryError('out of range model index: {}'
                               .format(self._bmi))
 
-    cdef void reset_buffer(self):
+    cdef void reset_str_buffer(self):
         self.STR_BUFFER = np.zeros(BMI_MAX_VAR_NAME, dtype=np.byte)
 
     def initialize(self, config_file):
@@ -109,7 +109,7 @@ cdef class Heat:
         ok_or_raise(status)
 
     cpdef object get_component_name(self):
-        self.reset_buffer()
+        self.reset_str_buffer()
         ok_or_raise(<int>bmi_get_component_name(self._bmi,
                                            self.STR_BUFFER,
                                            BMI_MAX_COMPONENT_NAME))
@@ -202,7 +202,7 @@ cdef class Heat:
         return step
 
     cpdef object get_time_units(self):
-        self.reset_buffer()
+        self.reset_str_buffer()
         ok_or_raise(<int>bmi_get_time_units(self._bmi, self.STR_BUFFER,
                                        BMI_MAX_UNITS_NAME))
         return to_string(self.STR_BUFFER)
@@ -227,7 +227,7 @@ cdef class Heat:
         return grid_id
 
     cpdef object get_grid_type(self, grid_id):
-        self.reset_buffer()
+        self.reset_str_buffer()
         ok_or_raise(<int>bmi_get_grid_type(self._bmi, grid_id,
                                        self.STR_BUFFER,
                                        BMI_MAX_TYPE_NAME))
@@ -308,7 +308,7 @@ cdef class Heat:
         return offset
 
     cpdef object get_var_type(self, var_name):
-        self.reset_buffer()
+        self.reset_str_buffer()
         ok_or_raise(<int>bmi_get_var_type(self._bmi,
                                           to_bytes(var_name),
                                           len(var_name),
@@ -317,7 +317,7 @@ cdef class Heat:
         return to_string(self.STR_BUFFER)
 
     cpdef object get_var_units(self, var_name):
-        self.reset_buffer()
+        self.reset_str_buffer()
         ok_or_raise(<int>bmi_get_var_units(self._bmi,
                                            to_bytes(var_name),
                                            len(var_name),
