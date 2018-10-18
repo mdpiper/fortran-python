@@ -11,7 +11,7 @@ ext_modules = [
             library_dirs=[bmi_lib],
             runtime_library_dirs=[bmi_lib],
             include_dirs=['.', bmi_lib],
-            extra_objects=['c_bmiheat.o'],
+            extra_objects=['bmi_interoperability.o'],
             language='c'
         )
 ]

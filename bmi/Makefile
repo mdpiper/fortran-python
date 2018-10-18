@@ -7,7 +7,7 @@ LDFLAGS = -L${BMI_LIB} -Wl,-rpath=${BMI_LIB} -lbmif -lbmiheatf
 name = bmiheat
 
 cython:
-	${FC} ${CFLAGS} ${FFLAGS} iop_${name}.f90
+	${FC} ${CFLAGS} ${FFLAGS} bmi_interoperability.f90
 	python setup.py build_ext --inplace
 	@date
 
