@@ -6,16 +6,16 @@ FFLAGS = -std=f2003
 LDFLAGS = -L${BMI_LIB} -Wl,-rpath=${BMI_LIB} -lbmif -lbmiheatf
 name = bmiheat
 
-py_${name}:
-	${FC} ${CFLAGS} ${FFLAGS} c_${name}.f90
+cython:
+	${FC} ${CFLAGS} ${FFLAGS} iop_${name}.f90
 	python setup.py build_ext --inplace
 	@date
 
-c_${name}:
-	${FC} ${CFLAGS} ${FFLAGS} c_${name}.f90
+iop:
+	${FC} ${CFLAGS} ${FFLAGS} iop_${name}.f90
 	${CC} ${CFLAGS} ${name}_ex.c
 	${CC} ${LDFLAGS} *.o -l${FC} -o $@
 	@date
 
 clean:
-	rm -rf *~ *.o *.so *.mod c_${name} ${name}.c build/
+	rm -rf *~ *.o *.so *.mod iop ${name}.c build/

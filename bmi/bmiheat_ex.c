@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "c_bmiheat.h"
+#include "iop_bmiheat.h"
 
 
 int main(int argc, char *argv[]) {
@@ -25,28 +25,28 @@ int main(int argc, char *argv[]) {
   void *ref;
 
   // Get a new model.
-  model = bmi_new();
+  model = iop_new();
   printf("Model %d\n", model);
 
   // Initialize the model.
-  status = bmi_initialize(model, config_file, nchars);
+  status = iop_initialize(model, config_file, nchars);
   printf("- initialize status: %d\n", status);
 
   // Get the model's name.
-  component_name = malloc(BMI_MAX_COMPONENT_NAME);
-  status = bmi_get_component_name(model, component_name, BMI_MAX_COMPONENT_NAME);
+  component_name = malloc(MAX_COMPONENT_NAME);
+  status = iop_get_component_name(model, component_name, MAX_COMPONENT_NAME);
   printf("- component name: %s\n", component_name);
   free(component_name);
 
   // Get the model's inputs. Pointers to pointers, oh my.
-  status = bmi_get_input_var_name_count(model, &n_invars);
+  status = iop_get_input_var_name_count(model, &n_invars);
   printf("- number of input vars: %d\n", n_invars);
   input_var_names = malloc(n_invars);
-  input_var_names[0] = malloc(BMI_MAX_VAR_NAME);
+  input_var_names[0] = malloc(MAX_VAR_NAME);
   for (i = 1; i < n_invars; i++) {
-    input_var_names[i] = input_var_names[i - 1] + BMI_MAX_VAR_NAME;
+    input_var_names[i] = input_var_names[i - 1] + MAX_VAR_NAME;
   }
-  status = bmi_get_input_var_names(model, input_var_names, n_invars);
+  status = iop_get_input_var_names(model, input_var_names, n_invars);
   printf("- input var names:\n");
   for (i = 0; i < n_invars; i++) {
     printf("  - %s\n", input_var_names[i]);
@@ -54,14 +54,14 @@ int main(int argc, char *argv[]) {
   free(input_var_names);
 
   // Get the model's outputs.
-  status = bmi_get_output_var_name_count(model, &n_outvars);
+  status = iop_get_output_var_name_count(model, &n_outvars);
   printf("- number of output vars: %d\n", n_outvars);
   output_var_names = malloc(n_outvars);
-  output_var_names[0] = malloc(BMI_MAX_VAR_NAME);
+  output_var_names[0] = malloc(MAX_VAR_NAME);
   for (i = 1; i < n_outvars; i++) {
-    output_var_names[i] = output_var_names[i - 1] + BMI_MAX_VAR_NAME;
+    output_var_names[i] = output_var_names[i - 1] + MAX_VAR_NAME;
   }
-  status = bmi_get_output_var_names(model, output_var_names, n_outvars);
+  status = iop_get_output_var_names(model, output_var_names, n_outvars);
   printf("- output var names:\n");
   for (i = 0; i < n_outvars; i++) {
     printf("  - %s\n", output_var_names[i]);
@@ -69,76 +69,76 @@ int main(int argc, char *argv[]) {
   free(output_var_names);
 
   // Get time information from the model.
-  status = bmi_get_start_time(model, &time);
+  status = iop_get_start_time(model, &time);
   printf("- model start time: %6.1f\n", time);
-  status = bmi_get_end_time(model, &time);
+  status = iop_get_end_time(model, &time);
   printf("- model stop time: %6.1f\n", time);
-  status = bmi_get_current_time(model, &time);
+  status = iop_get_current_time(model, &time);
   printf("- model current time: %6.1f\n", time);
-  status = bmi_get_time_step(model, &time);
+  status = iop_get_time_step(model, &time);
   printf("- model time step: %6.1f\n", time);
-  units = malloc(BMI_MAX_UNITS_NAME);
-  status = bmi_get_time_units(model, units, BMI_MAX_UNITS_NAME);
+  units = malloc(MAX_UNITS_NAME);
+  status = iop_get_time_units(model, units, MAX_UNITS_NAME);
   printf("- model time units: %s\n", units);
   free(units);
 
   // Update the model by a single time step.
-  status = bmi_update(model);
+  status = iop_update(model);
   printf("- update status: %d\n", status);
-  status = bmi_get_current_time(model, &time);
+  status = iop_get_current_time(model, &time);
   printf("- model current time: %6.1f\n", time);
 
   // Update the model by a fraction of a time step.
-  status = bmi_update_frac(model, 0.75);
+  status = iop_update_frac(model, 0.75);
   printf("- update_frac status: %d\n", status);
-  status = bmi_get_current_time(model, &time);
+  status = iop_get_current_time(model, &time);
   printf("- model current time: %6.1f\n", time);
 
   // Update the model until a later time.
-  status = bmi_update_until(model, 10.0);
+  status = iop_update_until(model, 10.0);
   printf("- update_until status: %d\n", status);
-  status = bmi_get_current_time(model, &time);
+  status = iop_get_current_time(model, &time);
   printf("- model current time: %6.1f\n", time);
 
   // Get grid information for the plate_surface__temperature variable.
   var_name = "plate_surface__temperature";
   nchars = strlen(var_name);
-  status = bmi_get_var_grid(model, var_name, nchars, &grid_id);
+  status = iop_get_var_grid(model, var_name, nchars, &grid_id);
   printf("- Grid info for %s\n", var_name);
   printf(" - grid_id: %d\n", grid_id);
-  grid_type = malloc(BMI_MAX_TYPE_NAME);
-  memset(grid_type, 0, BMI_MAX_TYPE_NAME);
-  status = bmi_get_grid_type(model, grid_id, grid_type, BMI_MAX_TYPE_NAME);
+  grid_type = malloc(MAX_TYPE_NAME);
+  memset(grid_type, 0, MAX_TYPE_NAME);
+  status = iop_get_grid_type(model, grid_id, grid_type, MAX_TYPE_NAME);
   printf(" - grid type: %s\n", grid_type);
   free(grid_type);
-  status = bmi_get_grid_rank(model, grid_id, &grid_rank);
+  status = iop_get_grid_rank(model, grid_id, &grid_rank);
   printf(" - grid rank: %d\n", grid_rank);
   grid_shape = malloc(grid_rank * sizeof(int));
-  /* status = bmi_get_grid_shape(model, grid_id, &grid_shape[0]); */
-  status = bmi_get_grid_shape(model, grid_id, grid_shape, grid_rank);
+  /* status = iop_get_grid_shape(model, grid_id, &grid_shape[0]); */
+  status = iop_get_grid_shape(model, grid_id, grid_shape, grid_rank);
   printf(" - grid shape:");
   for (i = 0; i < grid_rank; i++) {
     printf(" %d", grid_shape[i]);
   }
   printf("\n");
-  status = bmi_get_grid_size(model, grid_id, &grid_size);
+  status = iop_get_grid_size(model, grid_id, &grid_size);
   printf(" - grid size: %d\n", grid_size);
 
   // Get information for the plate_surface__temperature variable.
   var_name = "plate_surface__temperature";
   nchars = strlen(var_name);
   printf("- Variable info for %s\n", var_name);
-  var_type = malloc(BMI_MAX_TYPE_NAME);
-  memset(var_type, 0, BMI_MAX_TYPE_NAME);
-  status = bmi_get_var_type(model, var_name, nchars, var_type, BMI_MAX_TYPE_NAME);
+  var_type = malloc(MAX_TYPE_NAME);
+  memset(var_type, 0, MAX_TYPE_NAME);
+  status = iop_get_var_type(model, var_name, nchars, var_type, MAX_TYPE_NAME);
   printf(" - variable type: %s\n", var_type);
   free(var_type);
-  status = bmi_get_var_nbytes(model, var_name, nchars, &var_nbytes);
+  status = iop_get_var_nbytes(model, var_name, nchars, &var_nbytes);
   printf(" - total memory (bytes): %d\n", var_nbytes);
 
   // Get the values. (Note: not completely confident gridded order is correct.)
   buffer = malloc(grid_size * sizeof(float));
-  status = bmi_get_value_float(model, var_name, nchars, buffer, grid_size);
+  status = iop_get_value_float(model, var_name, nchars, buffer, grid_size);
   printf(" - values, streamwise:\n");
   for (i = 0; i < grid_size; i++) {
     printf(" %6.1f", ((float *)buffer)[i]);
@@ -158,10 +158,10 @@ int main(int argc, char *argv[]) {
   for (i = 0; i < grid_size; i++) {
     ((float *)new)[i] = (float)i;
   }
-  status = bmi_set_value_float(model, var_name, nchars, new, grid_size);
+  status = iop_set_value_float(model, var_name, nchars, new, grid_size);
   free(new);
   buffer = malloc(grid_size * sizeof(float));
-  status = bmi_get_value_float(model, var_name, nchars, buffer, grid_size);
+  status = iop_get_value_float(model, var_name, nchars, buffer, grid_size);
   printf(" - new values (set/get), streamwise:\n");
   for (i = 0; i < grid_size; i++) {
     printf(" %6.1f", ((float *)buffer)[i]);
@@ -169,8 +169,8 @@ int main(int argc, char *argv[]) {
   free(buffer);
 
   // Get a reference to a (float) variable and check that it updates.
-  status = bmi_get_current_time(model, &time);
-  status = bmi_get_value_ref(model, var_name, nchars, &ref);
+  status = iop_get_current_time(model, &time);
+  status = iop_get_value_ref(model, var_name, nchars, &ref);
   printf(" - values, dimensional, through ref, at time %6.1f:\n", time);
   for (j = 0; j < grid_shape[1]; j++) {
     for (i = 0; i < grid_shape[0]; i++) {
@@ -179,9 +179,9 @@ int main(int argc, char *argv[]) {
     }
     printf("\n");
   }
-  status = bmi_update(model);
+  status = iop_update(model);
   printf("- update status: %d\n", status);
-  status = bmi_get_current_time(model, &time);
+  status = iop_get_current_time(model, &time);
   printf(" - values, dimensional, through ref, at time %6.1f:\n", time);
   for (j = 0; j < grid_shape[1]; j++) {
     for (i = 0; i < grid_shape[0]; i++) {
@@ -195,6 +195,6 @@ int main(int argc, char *argv[]) {
   free(grid_shape);
 
   // Finalize the model.
-  status = bmi_finalize(model);
+  status = iop_finalize(model);
   printf("- finalize status: %d\n", status);
 }
