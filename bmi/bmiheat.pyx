@@ -43,6 +43,7 @@ cdef class Heat:
 
     def finalize(self):
         status = <int>bmi.finalize(self._bmi)
+        self._bmi = -1
         ok_or_raise(status)
 
     cpdef object get_component_name(self):

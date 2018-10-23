@@ -59,6 +59,7 @@ contains
     integer (c_int) :: status
 
     status = model_array(model_index)%finalize()
+    model_avail(model_index) = .true.
   end function finalize
 
   !
