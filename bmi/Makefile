@@ -18,4 +18,4 @@ iop:
 	@date
 
 clean:
-	rm -rf *~ *.o *.so *.mod iop ${name}.c build/
+	rm -rf *~ *.o *.so *.mod iop ${name}.c build/ .pytest_cache __pycache__
