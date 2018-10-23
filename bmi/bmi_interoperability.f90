@@ -10,8 +10,8 @@ module bmi_interoperability
   implicit none
 
   integer, parameter :: N_MODELS = 3
-  type (bmi_heat), target :: model_array(N_MODELS)
-  type (bmi_heat), pointer :: pmodel
+  type (bmi_heat) :: model_array(N_MODELS)
+  logical :: model_avail(N_MODELS) = .true.
 
 contains
 
@@ -22,19 +22,14 @@ contains
     integer (c_int) :: model_index
     integer :: i
 
-    model_index = 0
+    model_index = -1
     do i = 1, N_MODELS
-       if (associated(pmodel, target=model_array(i))) then
-          nullify(pmodel)
+       if (model_avail(i)) then
+          model_avail(i) = .false.
           model_index = i
+          exit
        end if
     end do
-    if (model_index.eq.N_MODELS) then
-       model_index = -1
-    else
-       model_index = model_index + 1
-       pmodel => model_array(model_index)
-    end if
   end function new_model
 
   !
