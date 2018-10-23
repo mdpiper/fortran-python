@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+# pytest
+.pytest_cache
+__pycache__
