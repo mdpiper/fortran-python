@@ -30,6 +30,9 @@ cdef class Heat:
             raise MemoryError('out of range model index: {}'
                               .format(self._bmi))
 
+    cpdef int _get_model_index(self):
+        return self._bmi
+
     cdef void reset_str_buffer(self):
         self.STR_BUFFER = np.zeros(bmi.MAX_VAR_NAME, dtype=np.byte)
 
