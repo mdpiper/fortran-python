@@ -189,35 +189,35 @@ cdef class Heat:
         return shape
 
     cpdef np.ndarray get_grid_spacing(self, grid_id, \
-                                      np.ndarray[float, ndim=1] spacing):
+                                      np.ndarray[double, ndim=1] spacing):
         cdef int rank = self.get_grid_rank(grid_id)
         ok_or_raise(<int>bmi.get_grid_spacing(self._bmi, grid_id,
                                               &spacing[0], rank))
         return spacing
 
     cpdef np.ndarray get_grid_origin(self, grid_id, \
-                                     np.ndarray[float, ndim=1] origin):
+                                     np.ndarray[double, ndim=1] origin):
         cdef int rank = self.get_grid_rank(grid_id)
         ok_or_raise(<int>bmi.get_grid_origin(self._bmi, grid_id,
                                              &origin[0], rank))
         return origin
 
     cpdef np.ndarray get_grid_x(self, grid_id, \
-                                np.ndarray[float, ndim=1] grid_x):
+                                np.ndarray[double, ndim=1] grid_x):
         cdef int size = self.get_grid_size(grid_id)
         ok_or_raise(<int>bmi.get_grid_x(self._bmi, grid_id,
                                         &grid_x[0], size))
         return grid_x
 
     cpdef np.ndarray get_grid_y(self, grid_id, \
-                                np.ndarray[float, ndim=1] grid_y):
+                                np.ndarray[double, ndim=1] grid_y):
         cdef int size = self.get_grid_size(grid_id)
         ok_or_raise(<int>bmi.get_grid_y(self._bmi, grid_id,
                                         &grid_y[0], size))
         return grid_y
 
     cpdef np.ndarray get_grid_z(self, grid_id, \
-                                np.ndarray[float, ndim=1] grid_z):
+                                np.ndarray[double, ndim=1] grid_z):
         cdef int size = self.get_grid_size(grid_id)
         ok_or_raise(<int>bmi.get_grid_z(self._bmi, grid_id,
                                         &grid_z[0], size))
