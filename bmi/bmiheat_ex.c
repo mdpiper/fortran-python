@@ -170,7 +170,7 @@ int main(int argc, char *argv[]) {
 
   // Get a reference to a (float) variable and check that it updates.
   status = get_current_time(model, &time);
-  status = get_value_ref(model, var_name, nchars, &ref);
+  status = get_value_ptr(model, var_name, nchars, &ref);
   printf(" - values, dimensional, through ref, at time %6.1f:\n", time);
   for (j = 0; j < grid_shape[1]; j++) {
     for (i = 0; i < grid_shape[0]; i++) {
