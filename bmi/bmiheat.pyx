@@ -295,13 +295,13 @@ cdef class Heat:
 
         return buffer
 
-    cpdef np.ndarray get_value_ref(self, var_name):
+    cpdef np.ndarray get_value_ptr(self, var_name):
         cdef int grid_id = self.get_var_grid(var_name)
         cdef int grid_size = self.get_grid_size(grid_id)
         cdef void* ptr
         type = self.get_var_type(var_name)
 
-        ok_or_raise(<int>bmi.get_value_ref(self._bmi,
+        ok_or_raise(<int>bmi.get_value_ptr(self._bmi,
                                            to_bytes(var_name),
                                            len(var_name), &ptr))
 

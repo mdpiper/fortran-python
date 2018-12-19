@@ -55,7 +55,7 @@ cdef extern from "bmi_interoperability.h":
     int get_value_double(int model, const char *var_name, int n_chars,
                          void *buffer, int size)
 
-    int get_value_ref(int model, const char *var_name,
+    int get_value_ptr(int model, const char *var_name,
                       int n_chars, void **ref)
 
     int set_value_int(int model, const char *var_name, int n_chars,
