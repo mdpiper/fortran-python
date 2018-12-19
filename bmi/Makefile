@@ -1,7 +1,8 @@
 BMI_LIB = ../bmi-fortran/_install/lib
+BMI_INC = ../bmi-fortran/_install/include
 FC = gfortran
 CC = gcc
-CFLAGS = -c -fPIC -I. -I${BMI_LIB}
+CFLAGS = -c -fPIC -I. -I${BMI_INC}
 FFLAGS = -std=f2003
 LDFLAGS = -L${BMI_LIB} -Wl,-rpath=${BMI_LIB} -lbmif -lbmiheatf
 name = bmiheat
